@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "Novel Nook",
+  "short_name": "Novel Nook",
+  "description": "A home for your stories",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f5f1",
+  "theme_color": "#f1eee8",
+  "icons": [
+    {
+      "src": "NovelTrackerMark.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

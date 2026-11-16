@@ -463,7 +463,7 @@ function inputField([key,label,type='text',width=''],book){
   const inputType=(type==='number'||scoreCategories.includes(key))?'number':type==='bookTitle'?'text':type;
   const step=['cost','score','goodreads'].includes(key)||type==='rating'?'.01':'1';
   const min=key==='year'?'1900':'0',max=key==='year'?'2040':key==='score'?'5':type==='rating'?'10':'';
-  const picker=choices.length?`<select class="field-option-select" aria-label="Choose a saved ${esc(plainLabel)}" title="Choose a saved ${esc(plainLabel)}" onchange="chooseBookDropdownOption(this,'${key}')"><option value="" selected disabled hidden>Choose</option>${choices.map(option=>`<option value="${esc(option)}">${esc(option)}</option>`).join('')}</select>`:'';
+  const picker=choices.length?`<select class="field-option-select" aria-label="Choose a saved ${esc(plainLabel)}" title="Choose a saved ${esc(plainLabel)}" onchange="chooseBookDropdownOption(this,'${key}')"><option value="" selected disabled hidden>⋯</option>${choices.map(option=>`<option value="${esc(option)}">${esc(option)}</option>`).join('')}</select>`:'';
   const input=`<input ${choices.length?`id="book-field-${key}"`:''} type="${inputType}" name="${key}" ${inputType==='number'?`step="${step}" min="${min}" ${max?`max="${max}"`:''}`:''} ${listAttr} value="${esc(val)}" placeholder="${key==='series'?'Series':plainLabel}" ${key==='arcsAndChapters'?`oninput="this.setCustomValidity('')"`:''}>`;
   return `<div class="field ${cls}"><label>${label}${scoreCategories.includes(key)?' (0–10)':''}</label>${picker?`<div class="field-input-with-options">${input}${picker}</div>`:input}${listMarkup}${key==='series'?'<small class="panel-note">Adding a book to an existing series? Choose the series here to fill in its details and suggest the next volume. Enter the book title above.</small>':''}</div>`;
 }
@@ -569,10 +569,10 @@ if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))navigator.s
 </style>
 <style id="saved-choice-picker-style">
 .field-input-with-options{display:flex;align-items:stretch;gap:6px;min-width:0}
-.field-input-with-options>input{width:100%;min-width:0;flex:1}
-.field-option-select{width:46px;min-width:46px;height:38px;padding:0 5px;border:1px solid #e5e0d8;border-radius:10px;background:#fffefa;color:#704768;text-align:center;font-size:16px;cursor:pointer}
+.field-input-with-options>input{width:0;min-width:0;flex:1 1 0}
+.field .field-option-select{width:54px;min-width:54px;max-width:54px;flex:0 0 54px;height:38px;padding:0 5px;border:1px solid #e5e0d8;border-radius:10px;background:#fffefa;color:#704768;text-align:center;font-size:16px;cursor:pointer}
 .field-option-select:focus-visible{outline:3px solid #a48baa66;outline-offset:2px}
-@media(max-width:760px){.field-input-with-options .field-option-select{min-height:44px;height:44px;font-size:16px}.field-input-with-options>input{min-height:44px;font-size:16px}}
+@media(max-width:760px){.form-grid{grid-template-columns:minmax(0,1fr);gap:15px}.form-grid .half{grid-column:1/-1}.form-grid .form-section{margin-top:14px}.field-input-with-options .field-option-select{min-height:44px;height:44px;font-size:16px}.field-input-with-options>input{min-height:44px;font-size:16px}}
 </style>
 
 </body>

@@ -125,7 +125,7 @@
   function weightedScore(book, genreRows = []) {
     const fields = ['characters', 'atmosphere', 'writing', 'plot', 'pacing', 'worldbuilding', 'enjoyment'];
     const ratings = fields.map(k => numeric(book?.[k]));
-    if (!ratings.some(v => v > 0)) return null;
+    if (!fields.some(k => book?.[k] !== '' && book?.[k] != null && Number.isFinite(Number(book[k])))) return null;
     const pages = numeric(book?.count || book?.pageCount);
     const bracket = Math.round(pages / 100) * 100;
     const short = bracket <= 300, epic = bracket > 600;
@@ -449,7 +449,7 @@
     });
     const groups = new Map();
     for (const book of candidates) {
-      const key = text(book.title || book.series).toLocaleLowerCase();
+      const key = text(book.series || book.title).toLocaleLowerCase();
       if (!groups.has(key)) groups.set(key, []);
       groups.get(key).push(book);
     }
@@ -461,10 +461,8 @@
         text(b.dateFinished).localeCompare(text(a.dateFinished)) || text(a.title).localeCompare(text(b.title)));
       const book = tied[0], volume = text(book.volumes);
       let bookLabel = text(book.title);
-      if (/^standalone$/i.test(volume)) {
-        const arcs = text(book.arcsAndChapters);
-        bookLabel += arcs && !/Chap\.|Part\./i.test(arcs) ? ` - ${arcs}` : ' - STND';
-      } else if (volume) bookLabel += ` - ${volume}`;
+      if (/^standalone$/i.test(volume)) bookLabel += ' - STND';
+      else if (volume) bookLabel += ` - ${volume}`;
       ranked.push({ bookId: book.id, title: bookLabel, author: book.author || '', genre: book.genre || '', score: maxScore,
         scoreBand: scoreBand(maxScore, candidates.map(item => numeric(item.scoreExact ?? item.score)), thresholds),
         isFavourite: truthy(book.isFavourite), dateFinished: book.dateFinished || '' });

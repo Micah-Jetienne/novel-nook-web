@@ -1,9 +1,10 @@
-const CACHE_NAME = 'novel-nook-web-v2';
+const CACHE_NAME = 'novel-nook-web-v4';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
   './NovelTrackerCore.js',
+  './NovelTrackerWorkbookImporter.js',
   './NovelTrackerMark.png'
 ];
 

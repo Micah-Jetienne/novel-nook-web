@@ -51,3 +51,74 @@
   .deals-panel .data-table{min-width:560px}.deals-panel .table-wrap{max-width:100%;overflow-x:auto}
   .wishlist-form-grid .wish-wide{grid-column:1/-1}
 }
+
+/* Compact portrait: keep controls in document order and eliminate sideways workflows. */
+@media(max-width:760px){
+  html,body{max-width:100%;overflow-x:clip}
+  .app,.main,.content,.panel,.field,.modal-body{min-width:0;max-width:100%}
+  .content{overflow-wrap:anywhere}
+  .topbar{padding-top:calc(12px + env(safe-area-inset-top));position:relative}
+  input,select,textarea,button{font-size:16px!important}
+  input:not([type=hidden]):not([type=checkbox]):not([type=radio]),select,textarea{width:100%;max-width:100%;min-width:0;padding:12px!important}
+  select{height:auto!important;min-height:48px!important;white-space:normal}
+  button,summary,[role=button],.text-button{min-height:44px!important}
+  button{padding:10px 12px;max-width:100%;white-space:normal}
+  .close,.wish-remove,.notification-dismiss{min-width:44px!important;width:44px!important;height:44px!important}
+  .mobile-bottom-nav button{font-size:12px!important;padding:4px 2px}
+  .mobile-bottom-nav{z-index:10}
+  .global-search{grid-column:1/-1}
+  .topbar>.primary{grid-column:1/-1;width:100%}
+  .top-spacer{display:none}
+  .picker-controls,.form-grid,.reading-setup-grid,.reading-progress-grid,
+  .wishlist-form-grid,.month-breakdown,.home-metrics,.metrics,.dashboard-metrics,
+  .dashboard-content .dashboard-metrics,.shop-stats,.life-stats,.detail-grid,
+  .wrapped-grid,.wrapped-metrics,.engine-pressures,.reading-evidence-stats,
+  .wi-quiz-options,.wi-score-pair,.wi-prediction-grid,.book-grid{grid-template-columns:minmax(0,1fr)!important}
+  .library-toolbar,.dropdown-manager-row,.welcome-actions,.mode-controls,
+  .best-book-controls,.wrapped-controls,.shop-money-input{display:flex!important;flex-direction:column;align-items:stretch;gap:12px}
+  .library-toolbar>*,.dropdown-manager-row>*,.best-book-controls>*{width:100%;min-width:0;max-width:100%}
+  .toolbar-spacer{display:none}
+  .filter-tabs,.library-page .filter-tabs,.filter-group,.pick-history{flex-wrap:wrap!important;overflow-x:visible!important;max-width:100%}
+  .filter-group{display:flex;gap:8px}
+  .filter-group>span{flex-basis:100%}
+  .library-scroll{max-height:none;overflow:visible;scrollbar-gutter:auto}
+  .wishlist-list .wish-card{grid-template-columns:minmax(0,1fr)!important;padding:16px!important;gap:12px!important}
+  .wishlist-list .wish-card>*{grid-column:1!important;grid-row:auto!important;max-width:100%;min-width:0}
+  .wishlist-list .wish-priority-select,.wishlist-list .wish-status{width:100%;max-width:none}
+  .wishlist-list .wish-remove{justify-self:end}
+  .modal-foot{display:flex;flex-direction:column;align-items:stretch}
+  .modal-foot>button,.modal-foot .finish-action-slot{width:100%!important;max-width:none;min-width:0!important;flex:auto!important}
+  .modal-foot .spacer{display:none}
+  .modal-foot .finish-action-slot .finish-book{width:100%!important;max-width:none!important;min-width:0!important}
+  .finish-action-slot .finish-book .finish-indicator{opacity:1!important}
+  .overlay{z-index:30;align-items:flex-end;padding:env(safe-area-inset-top) 0 0}
+  .modal,.modal.wide,.finish-modal{border-radius:20px 20px 0 0;max-height:calc(100dvh - env(safe-area-inset-top))!important;margin:0}
+  .modal-foot{padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+  .modal-body{scroll-padding-bottom:24px}
+  .choice-checkbox,.checkbox-group label,.import-intent{min-height:44px;padding:10px;gap:12px}
+  .table-wrap,.deals-panel .table-wrap,.engine-table-scroll{overflow:visible;max-height:none!important}
+  .data-table,.deals-panel .data-table,.engine-table-scroll table{width:100%;min-width:0!important;table-layout:fixed}
+  .data-table th,.data-table td,.engine-table-scroll th,.engine-table-scroll td{white-space:normal!important;overflow-wrap:anywhere;padding:8px 4px}
+  .genre-quadrant-scroll{overflow:visible;contain:none}
+  .risk-scatter.genre-quadrant{min-width:0;width:100%;height:auto}
+  .toast{width:calc(100% - 32px);max-width:420px;z-index:40}
+}
+
+/* Touch screens expose actions without hover expansion or hidden controls. */
+@media(hover:none){
+  .finish-book,.close-action{transition:none!important}
+  .finish-indicator,.library-card-actions,.book-actions,.wish-remove{opacity:1!important;visibility:visible!important}
+  .library-card:hover,.wish-card:hover,.home-best-row:hover,.best-book-row:hover{transform:none!important}
+}
+@media(max-width:760px){
+  .wrapped-shelf-preview{grid-template-columns:minmax(0,1fr);padding:20px}
+  .shelf-copy,.shelf-covers{min-width:0;max-width:100%}
+  .shelf-covers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;height:auto;align-items:end;padding:16px 0}
+  .shelf-covers .shelf-cover{width:100%;min-width:0;padding:0;transform:none!important}
+  .shelf-covers .cover.large{width:100%;height:auto;aspect-ratio:84/116;min-width:0}
+}
+@media(max-width:760px){
+  .wrapped-hero{grid-template-columns:minmax(0,1fr)!important;padding:24px!important;gap:16px}
+  .wrapped-hero>*{min-width:0;max-width:100%;grid-column:1!important;grid-row:auto!important}
+  .wrapped-year{width:100%}
+}

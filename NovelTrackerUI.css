@@ -130,3 +130,11 @@ html{scrollbar-gutter:stable}.metric-top,.life-week-day>span,.life-week-day smal
 .category-score-card .category-compare > div > .category-book { height:8px; background:#8a674a; border-radius:4px; z-index:2; }
 .category-score-card .category-compare + .chart-legend .legend-this { background:#8a674a; }
 .category-score-card .category-compare + .chart-legend .legend-last { background:#b99a60; }
+
+/* Each reading award owns its winner, even when titles repeat. */
+.wrapped-content .award-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);column-gap:24px;row-gap:4px;align-items:center;padding:18px 20px}
+.wrapped-content .award-card>span{grid-column:1;grid-row:1 / 3;margin:0;overflow-wrap:anywhere}
+.wrapped-content .award-card>b{grid-column:2;grid-row:1;margin:0;overflow-wrap:anywhere}
+.wrapped-content .award-card>small{grid-column:2;grid-row:2;margin:0;overflow-wrap:anywhere}
+.wrapped-content .empty-award>small{grid-row:1 / 3}
+@media(max-width:600px){.wrapped-content .award-card{grid-template-columns:minmax(0,1fr);gap:8px;padding:16px}.wrapped-content .award-card>span,.wrapped-content .award-card>b,.wrapped-content .award-card>small{grid-column:1;grid-row:auto}}

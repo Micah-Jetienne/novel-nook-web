@@ -160,3 +160,112 @@ body{background:#f7f4ee;color:#48382e}
 
 /* Slightly more breathing room on the outside of the tick. */
 .finish-action-slot .finish-book .finish-indicator,.finish-action-slot .finish-book:hover .finish-indicator,.finish-action-slot .finish-book:focus-visible .finish-indicator{right:10px}
+
+/* Preserve the approved Fanned Stories icon colours. */
+.brandmark img{filter:none}
+/* Fill the sidebar tile with the icon artwork rather than its transparent canvas. */
+.brandmark{position:relative;overflow:hidden;padding:0;background:transparent!important}
+.brandmark img{position:absolute;inset:-9%;width:118%!important;height:118%!important;max-width:none;border-radius:0;object-fit:cover;filter:none}
+/* A restrained segmented layout control and compact, scannable library rows. */
+.library-view-switcher{display:inline-flex;flex:none;gap:3px;padding:3px;background:#eae4db;border:1px solid #ded5c8;border-radius:11px}
+.library-view-switcher button{display:grid;place-items:center;width:36px;min-width:36px;min-height:34px!important;padding:6px;border:0;border-radius:8px;background:transparent;color:#827565;box-shadow:none}
+.library-view-switcher button[aria-pressed=true]{background:#fffdf8;color:#5d4432;box-shadow:0 1px 4px #4e38231c}
+.library-view-switcher svg{width:19px;height:19px}
+.book-grid.library-list{display:flex;flex-direction:column;gap:8px}
+.library-list .library-card{display:grid;grid-template-columns:56px minmax(0,1.5fr) minmax(0,1fr) minmax(150px,.9fr);grid-template-rows:auto auto auto;align-items:center;gap:4px 18px;min-height:0;padding:14px 18px;border-radius:14px;text-align:left}
+.library-list .library-card-art{grid-column:1;grid-row:1/4;min-height:0;align-self:center;background:none;padding:0;margin:0;display:block}
+.library-list .library-card-art .cover{width:52px!important;height:76px!important;margin:0;border-radius:5px}
+.library-list .library-card-title{grid-column:2;grid-row:1;margin:0;font-size:15px}
+.library-list .library-card-author{grid-column:2;grid-row:2;margin:0}
+.library-list .library-card-genre{grid-column:3;grid-row:1;margin:0}
+.library-list .library-card-meta{grid-column:3;grid-row:2;display:flex;flex-wrap:wrap;gap:6px;margin:0}
+.library-list .library-card-status{grid-column:4;grid-row:1;display:flex;flex-wrap:wrap;gap:5px;margin:0}
+.library-list .library-card-foot{grid-column:4;grid-row:2;justify-content:flex-start;flex-wrap:wrap;gap:8px;border:0;padding:0;margin:0}
+.library-list .library-card-finished{grid-column:2/5;grid-row:3;margin:0;padding:0;border:0;font-size:11px}
+@media(max-width:760px){.library-view-switcher button{width:40px;min-height:40px!important}.library-list .library-card{grid-template-columns:50px minmax(0,1fr);gap:6px 14px;padding:14px}.library-list .library-card-art{grid-column:1;grid-row:1/9;align-self:start}.library-list .library-card-art .cover{width:48px!important;height:70px!important}.library-list .library-card>:not(.library-card-art){grid-column:2;grid-row:auto}.library-list .library-card-title{font-size:16px}}
+/* Shared quiet dropdown treatment for recommendation mode and picker filters. */
+.next-read-settings #mode-select,.picker-controls select{appearance:none;height:auto!important;min-height:46px!important;padding:12px 38px 12px 14px!important;border:1px solid #e7dfd4!important;border-radius:12px!important;background:#f7f3ed url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='16' viewBox='0 0 14 16' fill='none' stroke='%23867968' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 5 3-3 3 3M4 11l3 3 3-3'/%3E%3C/svg%3E") no-repeat right 14px center!important;box-shadow:inset 0 1px 2px #48372503;color:#514a42;transition:border-color .18s,background-color .18s,box-shadow .18s}
+.next-read-settings #mode-select:hover,.picker-controls select:hover{border-color:#cfc1ad!important;background-color:#faf7f1!important}
+.next-read-settings #mode-select:focus-visible,.picker-controls select:focus-visible{outline:2px solid #b59a733f!important;outline-offset:1px;border-color:#ae9065!important;background-color:#fffdf8!important;box-shadow:0 0 0 3px #b59a7312!important}
+/* Wishlist composer: consistent, quiet controls and aligned field rows. */
+.wishlist-form-grid{gap:16px;align-items:end}
+.wishlist-form-grid>.field{min-width:0;display:flex;flex-direction:column;gap:7px}
+.wishlist-form-grid .field label{margin:0;font-size:12px!important;font-weight:600;letter-spacing:.025em;color:#776b5d!important}
+.wishlist-form-grid .field :is(input,select){box-sizing:border-box;width:100%;height:46px;min-height:46px;padding:12px 14px;border:1px solid #e7dfd4;border-radius:12px;background-color:#f7f3ed;color:#514a42;box-shadow:inset 0 1px 2px #48372503;transition:border-color .18s,background-color .18s,box-shadow .18s}
+.wishlist-form-grid .field select{appearance:none;padding-right:38px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='16' viewBox='0 0 14 16' fill='none' stroke='%23867968' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 5 3-3 3 3M4 11l3 3 3-3'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.wishlist-form-grid .field :is(input,select):hover{border-color:#cfc1ad;background-color:#faf7f1}
+.wishlist-form-grid .field :is(input,select):focus-visible{outline:2px solid #b59a733f!important;outline-offset:1px;border-color:#ae9065;background-color:#fffdf8;box-shadow:0 0 0 3px #b59a7312!important}
+.wishlist-form-grid .wish-add-button{height:46px;min-height:46px;border-radius:12px;margin:0;align-self:end;padding:12px 16px}
+@media(prefers-reduced-motion:reduce){.wishlist-form-grid .field :is(input,select){transition:none}}
+/* Consistent controls for wishlist rows, spending plans and book editing. */
+:is(.wish-priority-select,.wish-status) select,.shop-money-input input,.month-target input,#book-form .field input:not([type=checkbox]):not([type=hidden]):not([type=file]),#book-form .field select,#book-form .field textarea{box-sizing:border-box;border:1px solid #e7dfd4;border-radius:12px;background-color:#f7f3ed;color:#514a42;padding:12px 14px;min-height:46px;box-shadow:inset 0 1px 2px #48372503;transition:border-color .18s,background-color .18s,box-shadow .18s}
+:is(.wish-priority-select,.wish-status) select,#book-form .field select{appearance:none;padding-right:38px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='16' viewBox='0 0 14 16' fill='none' stroke='%23867968' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 5 3-3 3 3M4 11l3 3 3-3'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+:is(.wish-priority-select,.wish-status) select:hover,.shop-money-input input:hover,.month-target input:hover,#book-form .field :is(input:not([type=checkbox]):not([type=hidden]):not([type=file]),select,textarea):hover{border-color:#cfc1ad;background-color:#faf7f1}
+:is(.wish-priority-select,.wish-status) select:focus-visible,.shop-money-input input:focus-visible,.month-target input:focus-visible,#book-form .field :is(input:not([type=checkbox]):not([type=hidden]):not([type=file]),select,textarea):focus-visible{outline:2px solid #b59a733f!important;outline-offset:1px;border-color:#ae9065;background-color:#fffdf8;box-shadow:0 0 0 3px #b59a7312!important}
+.wish-priority-select label,.wish-status label,.month-target-label,.shop-annual-edit>label,#book-form .field>label{font-weight:600;letter-spacing:.025em;font-size:12px!important;color:#776b5d!important}
+.wish-priority-select,.wish-status{display:flex;flex-direction:column;gap:7px;min-width:0}.wish-priority-select label,.wish-status label{margin:0}
+.shop-money-input{align-items:center;gap:10px}.shop-money-input input{height:46px}.shop-money-input .primary{height:46px;border-radius:12px;padding:12px 16px}
+.month-target{gap:8px;align-items:center}.month-target input{min-width:0;width:100%;height:46px;border-bottom:1px solid #e7dfd4}
+#book-form .field textarea{line-height:1.65;resize:vertical}
+#book-form .reading-setup-grid .field>input,#book-form .reading-setup-grid .field>select,#book-form .reading-progress-grid .field>input{height:48px;min-height:48px}
+#book-form .score-output{border-color:#e7dfd4;border-radius:12px;background:#f3eee6;min-height:48px}
+#book-form .checkbox-group input{accent-color:#8b6a48}
+@media(prefers-reduced-motion:reduce){:is(.wish-priority-select,.wish-status) select,.shop-money-input input,.month-target input,#book-form .field :is(input,select,textarea){transition:none}}
+
+/* Library toolbar filters match the shared soft control treatment. */
+.library-toolbar>select.select{appearance:none;box-sizing:border-box;height:46px;min-height:46px;padding:12px 38px 12px 14px;border:1px solid #e7dfd4;border-radius:12px;background:#f7f3ed url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='16' viewBox='0 0 14 16' fill='none' stroke='%23867968' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 5 3-3 3 3M4 11l3 3 3-3'/%3E%3C/svg%3E") no-repeat right 14px center;color:#514a42;box-shadow:inset 0 1px 2px #48372503;transition:border-color .18s,background-color .18s,box-shadow .18s}
+.library-toolbar>select.select:hover{border-color:#cfc1ad;background-color:#faf7f1}
+.library-toolbar>select.select:focus-visible{outline:2px solid #b59a733f!important;outline-offset:1px;border-color:#ae9065;background-color:#fffdf8;box-shadow:0 0 0 3px #b59a7312!important}
+@media(prefers-reduced-motion:reduce){.library-toolbar>select.select{transition:none}}
+
+/* Best books year selector shares the soft control treatment. */
+.best-book-controls select{appearance:none;box-sizing:border-box;height:46px;min-height:46px;padding:12px 38px 12px 14px;border:1px solid #e7dfd4;border-radius:12px;background:#f7f3ed url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='16' viewBox='0 0 14 16' fill='none' stroke='%23867968' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 5 3-3 3 3M4 11l3 3 3-3'/%3E%3C/svg%3E") no-repeat right 14px center;color:#514a42;box-shadow:inset 0 1px 2px #48372503;transition:border-color .18s,background-color .18s,box-shadow .18s}
+.best-book-controls select:hover{border-color:#cfc1ad;background-color:#faf7f1}
+.best-book-controls select:focus-visible{outline:2px solid #b59a733f!important;outline-offset:1px;border-color:#ae9065;background-color:#fffdf8;box-shadow:0 0 0 3px #b59a7312!important}
+@media(prefers-reduced-motion:reduce){.best-book-controls select{transition:none}}
+
+/* Wrapped year selector shares the soft control treatment. */
+.wrapped-year select{appearance:none;box-sizing:border-box;height:46px;min-height:46px;padding:12px 38px 12px 14px;border:1px solid #e7dfd4;border-radius:12px;background:#f7f3ed url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='16' viewBox='0 0 14 16' fill='none' stroke='%23867968' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 5 3-3 3 3M4 11l3 3 3-3'/%3E%3C/svg%3E") no-repeat right 14px center!important;color:#514a42;box-shadow:inset 0 1px 2px #48372503;transition:border-color .18s,background-color .18s,box-shadow .18s}
+.wrapped-year select:hover{border-color:#cfc1ad;background-color:#faf7f1}
+.wrapped-year select:focus-visible{outline:2px solid #b59a733f!important;outline-offset:1px;border-color:#ae9065;background-color:#fffdf8;box-shadow:0 0 0 3px #b59a7312!important}
+@media(prefers-reduced-motion:reduce){.wrapped-year select{transition:none}}
+/* Canonical book status palette. Reading state and collection state retain text labels. */
+:is(.status-pill.s-read,[data-book-status="Read"]){--status-fill:#e5f3e5;--status-border:#b8d8b8;--status-text:#286332;--status-dot:#49844e}
+:is(.status-pill.s-blocked,[data-book-status="Blocked"]){--status-fill:#efe8f7;--status-border:#cfb5e8;--status-text:#63368a;--status-dot:#8a58b5}
+:is(.status-pill.s-on-hold,[data-book-status="On Hold"]){--status-fill:#fff0d9;--status-border:#e8c18a;--status-text:#805218;--status-dot:#c48a37}
+:is(.status-pill.s-reading,[data-book-status="Reading"]){--status-fill:#e2f2ef;--status-border:#acd4cb;--status-text:#24675e;--status-dot:#4b998c}
+:is(.status-pill.s-dnf,[data-book-status="DNF"]){--status-fill:#65686f;--status-border:#565960;--status-text:#ffffff;--status-dot:#e0e2e7}
+:is(.status-pill.s-sold,[data-book-status="Sold"]){--status-fill:#e7f0ff;--status-border:#bdd2f2;--status-text:#28578b;--status-dot:#5787bf}
+:is(.status-pill.s-unhauled,[data-book-status="Unhauled"]){--status-fill:#fde7e5;--status-border:#edb9b3;--status-text:#963d36;--status-dot:#c7655e}
+:is(.status-pill.s-borrowed,[data-book-status="Borrowed"]){--status-fill:#f6e5f1;--status-border:#deb6d2;--status-text:#873e73;--status-dot:#b368a0}
+:is(.status-pill.s-loaned-out,[data-book-status="Loaned Out"]){--status-fill:linear-gradient(110deg,#f8dfdf,#f8e6d3 18%,#f4edcf 35%,#dfeddc 52%,#dce9f7 70%,#eadff5 87%,#f4dfee);--status-border:#d6c6d7;--status-text:#504653;--status-dot:conic-gradient(#c86b76,#d5a553,#83a86c,#6c99bf,#9b78ba,#c86b76)}
+.status-pill{background:var(--status-fill,#fdfbf8)!important;border-color:var(--status-border,#e9e5de)!important;color:var(--status-text,#716b62)!important}
+.status-pill::before{background:var(--status-dot,#aaa398)!important}
+.filter-group button[data-book-status]::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;background:var(--status-dot,#aaa398)}
+.filter-group button.active[data-book-status]:not([data-book-status="Owned"]){background:var(--status-fill)!important;border-color:var(--status-border)!important;color:var(--status-text)!important}
+.book-item.status-row-read{border-left-color:#49844e}.book-item.status-row-blocked{border-left-color:#8a58b5}.book-item.status-row-on-hold{border-left-color:#c48a37}.book-item.status-row-reading{border-left-color:#4b998c}.book-item.status-row-dnf{border-left-color:#65686f}.book-item.status-row-sold{border-left-color:#5787bf}.book-item.status-row-unhauled{border-left-color:#c7655e}.book-item.status-row-borrowed{border-left-color:#b368a0}
+
+/* The banner leaves the viewport; library filters then stay below the header. */
+.library-frozen-controls{position:sticky;top:var(--library-header-height,84px);z-index:1;background:var(--paper);padding:12px 0 8px;margin-top:-12px;margin-bottom:16px;box-shadow:0 8px 10px -10px #48382e40}
+.library-frozen-controls .library-toolbar{margin-bottom:0}
+.library-frozen-controls .active-filters{padding-bottom:0}
+.library-frozen-controls .compact-library-filters{margin-bottom:12px}
+
+/* Contain card hover/focus layers below the sticky controls and main header. */
+.library-page .library-grid-shell{position:relative;z-index:0;isolation:isolate}
+
+/* Distinct priority badges, with numbers retained alongside colour. */
+.wish-rank.rank-1{background:#f8dfdd;color:#8b302d}
+.wish-rank.rank-2{background:#f9e8cc;color:#80500f}
+.wish-rank.rank-3{background:#deecdf;color:#305f3c}
+.wish-rank.rank-4{background:#ddeaf7;color:#315c83}
+.wish-rank.rank-5{background:#ebe0f3;color:#65417e}
+.wish-rank b,.wishlist-list .wish-rank small{color:inherit!important}
+
+/* Book Corner identity: flat mark in the interface, dimensional tile for the OS. */
+.sidebar .brandmark{background:transparent!important;box-shadow:none!important;border-radius:0;flex:none;width:38px;height:42px}
+.sidebar .brandmark img{object-fit:contain;border-radius:0;filter:none!important}
+.sidebar .brand{gap:9px}
+.sidebar .brand>div:last-child{min-width:0}
+.sidebar .brandname{font-weight:650;letter-spacing:-.6px;white-space:nowrap}
+@media(min-width:700px) and (max-width:1199px){html[data-platform=desktop] .sidebar .brand{padding-left:2px;padding-right:2px;gap:7px}html[data-platform=desktop] .sidebar .brandmark{width:30px;height:34px}html[data-platform=desktop] .sidebar .brandname{font-size:17px}}

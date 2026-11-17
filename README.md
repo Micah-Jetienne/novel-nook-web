@@ -28,6 +28,6 @@ Importing a full backup offers two distinct choices: merge its book records whil
 
 ## iPhone 11 layout
 
-The web-only mobile stylesheet supports 414 × 896 portrait and 896 × 414 landscape, with safe-area spacing for the notch and home indicator, 16px form text to prevent focus zoom, and 44px minimum primary touch targets. Navigation remains available in both orientations. Dialogs use the available viewport height and scroll internally; wide charts and tables scroll inside their own containers. Page zoom remains available.
+The web-only mobile stylesheet targets 375 × 812 portrait and also supports 414 × 896 portrait and 896 × 414 landscape, with safe-area spacing for the notch and home indicator, 16px form text to prevent focus zoom, and 44px minimum buttons and dropdown triggers. Navigation remains available in both orientations. Dialogs use the available viewport height and scroll internally; charts fit the available width and table text wraps without horizontal scrolling. Page zoom remains available.
 
 The current web release includes the parchment theme, consolidated Stats and recommendation portfolio/lifecycle. Device libraries stay in browser storage and are not published with the app. After an update, close and reopen the Home Screen app or refresh Safari to load the new cached version.

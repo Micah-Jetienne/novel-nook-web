@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <title>Novel Nook — the book corner</title>
+  <path fill="#79583e" d="M64 9c-4 0-8 1-12 3L13 29c-5 2-8 6-8 12v65c0 5 3 8 7 10l6 3c3 1 6 0 6-4V43l40-18 40 18v72c0 4 3 5 6 4l6-3c4-2 7-5 7-10V41c0-6-3-10-8-12L76 12c-4-2-8-3-12-3Z"/>
+  <path fill="#fffdf8" d="m64 18-49 21 11 6 38-17 38 17 11-6-49-21Z"/>
+  <path stroke="#b99a60" stroke-width="2" d="m23 39 36-16m10 0 36 16"/>
+  <path fill="#fffdf8" d="m27 47 35-16v53l-35 16V47Zm39-16 35 16v53L66 84V31Z"/>
+  <path stroke="#b99a60" stroke-width="3" d="M64 29v49"/>
+  <path fill="#b99a60" d="M58 84c4-2 8-2 12 0l29 13c4 2 6 5 6 9v9c0 2-2 3-4 2l-29 11c-5 2-11 2-16 0l-29-11c-2 1-4 0-4-2v-9c0-4 2-7 6-9l29-13Z" transform="translate(0 -3)"/>
+</svg>

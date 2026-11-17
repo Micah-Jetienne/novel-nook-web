@@ -1,4 +1,4 @@
-const CACHE_NAME = 'novel-nook-web-v24';
+const CACHE_NAME = 'novel-nook-web-v45';
 const APP_SHELL = [
   './',
   './index.html',
@@ -8,11 +8,16 @@ const APP_SHELL = [
   './NovelTrackerRecommendationLifecycle.js',
   './NovelTrackerRecommendations.js',
   './NovelTrackerUI.js',
+  './NovelTrackerWrapped.js',
+  './NovelTrackerWrapped.css',
+  './NovelTrackerReadingLife.js',
+  './NovelTrackerReadingLife.css',
   './NovelTrackerUI.css',
   './NovelTrackerTheme.css',
-  './NovelTrackerMobile.css',
+  './NovelTrackerMobile.css?v=45',
   './NovelTrackerWorkbookImporter.js',
-  './NovelTrackerMark.png'
+  './NovelTrackerMark.png',
+  './NovelNookLogo.svg'
 ];
 
 self.addEventListener('install', event => {

@@ -241,8 +241,8 @@ window.NookUI = (() => {
       wrapped.querySelector('.wrapped-chat')?.remove();
       const caption=wrapped.querySelector('.shelf-copy p');if(caption)caption.textContent='The stories that made this year yours.';
       const columns=wrapped.querySelector('.wrapped-columns');if(columns)columns.replaceChildren(...all('.wrapped-column > *',columns));
-      // A book can win several different awards: retain every category without repeating its title.
-      const awards=wrapped.querySelector('.award-grid');if(awards){const groups=new Map();all('button.award-card',awards).forEach(card=>{const key=card.getAttribute('onclick');const previous=groups.get(key);if(!previous){groups.set(key,card);card.classList.add('award-winner');return;}const badge=document.createElement('span');badge.className='award-category';badge.textContent=card.querySelector('span').textContent+' · '+card.querySelector('small').textContent.split(' · ').pop();previous.appendChild(badge);card.remove();});}
+      // Keep every category visible, including when one book wins multiple awards.
+      all('button.award-card',wrapped).forEach(card=>card.classList.add('award-winner'));
     }
   }
   function organizeInsights() {
@@ -354,6 +354,27 @@ window.NookUI = (() => {
       subtitle.textContent=document.querySelector('.page-subtitle')?.textContent||'';
       copy.append(eyebrow,title,subtitle);banner.appendChild(copy);content.prepend(banner);
     }
+    // Keep library controls below the live header after the banner scrolls away.
+    decorateParchment.headerObserver?.disconnect();
+    if(ui.page==='Library'){
+      const toolbar=content.querySelector('.library-toolbar');
+      if(toolbar&&!toolbar.closest('.library-frozen-controls')){
+        const pane=document.createElement('div');pane.className='library-frozen-controls';
+        toolbar.before(pane);
+        const compact=content.querySelector('.compact-library-filters');
+        if(compact)pane.appendChild(compact);
+        pane.appendChild(toolbar);
+        const summary=content.querySelector('.active-filters');
+        if(summary)pane.appendChild(summary);
+      }
+      const header=document.querySelector('.topbar');
+      const updateOffset=()=>content.style.setProperty('--library-header-height',`${header?.getBoundingClientRect().height||0}px`);
+      updateOffset();
+      if(header&&window.ResizeObserver){
+        decorateParchment.headerObserver=new ResizeObserver(updateOffset);
+        decorateParchment.headerObserver.observe(header);
+      }
+    }
     if(banner){
       banner.classList.add('parchment-banner');
       if(['Home','Library','ReadingLife','BestBooks','Planning','Recommendations'].includes(ui.page)&&!banner.querySelector('.parchment-banner-books')){
@@ -383,7 +404,7 @@ window.NookUI = (() => {
     document.documentElement.dataset.platform=native()?'desktop':'web';
     const root=document.getElementById('root');if(!root)return;
     const main=root.querySelector('main');if(main){main.dataset.page=ui.page;const heading=main.querySelector('.page-title');if(heading){heading.dataset.focusKey='page-heading-'+ui.page;heading.tabIndex=-1;}}
-    streamlinePages();organizeInsights();enhanceEmptyStates();enhanceCharts();decorateParchment();makeLabels(root);
+    streamlinePages();organizeInsights();enhanceEmptyStates();enhanceCharts();window.NookWrapped?.mount();decorateParchment();makeLabels(root);
     all('.finish-action-slot .finish-book',root).forEach(button=>{
       const label=button.querySelector('span:first-child');if(!label)return;
       const range=document.createRange();range.selectNodeContents(label);
@@ -392,6 +413,7 @@ window.NookUI = (() => {
       // Eight pixels before the tick, ten after it, plus the right border.
       button.style.setProperty('--finish-expanded-width',`${textRight+39}px`);
     });
+    all('.filter-group button[onclick]',root).forEach(button=>{const match=button.getAttribute('onclick').match(/^set(?:Collection)?Filter\('([^']+)'\)$/);if(match&&match[1]!=='All')button.dataset.bookStatus=match[1];});
     all('.quote-mark,.shop-stat-icon,.month-icon,.picker-doodle,.wrapped-chat-avatar,.dash-glyph,.metric-icon,.searchicon,.cover-fallback,.shop-orbit,.shop-spark',root).forEach(el=>el.setAttribute('aria-hidden','true'));
     all('.recent-row[onclick]',root).forEach(el=>{el.setAttribute('tabindex','0');el.setAttribute('role','button');});
     all('tr.click-row[onclick]',root).forEach(row=>{const cell=row.querySelector('td');if(cell){const name=cell.textContent;const button=document.createElement('button');button.className='text-button';button.textContent=name;button.setAttribute('aria-label',`Show ${name} books in your library`);button.addEventListener('click',event=>{event.stopPropagation();row.click();});cell.textContent='';cell.appendChild(button);}});

@@ -19,3 +19,15 @@ The phone layout uses a five-tab navigation bar for Home, My Books, Reading, Pla
 On the Mac, export a full JSON backup from Novel Nook and AirDrop it to the iPhone. Changes made on the iPhone stay in that browser; export a backup from the phone to move them back to the Mac.
 
 JSON and CSV imports and exports are supported. The web app also imports .xlsx and .xlsm workbooks directly in the browser; macros are not run. Workbook import requires Safari 16.4 or later (or a browser with equivalent ZIP decompression support).
+
+## Updated interface and recovery
+
+Publish the complete folder, including `NovelTrackerUI.js` and `NovelTrackerUI.css`. The interface shares the desktop form, modal, filter, notification and accessibility foundations.
+
+Importing a full backup offers two distinct choices: merge its book records while retaining current settings/history, or restore the complete backup. Restoration creates a local recovery copy first. Open More → Settings & shortcuts → Recover previous library to review that copy. Export a full backup when you need a separate file outside browser storage.
+
+## iPhone 11 layout
+
+The web-only mobile stylesheet supports 414 × 896 portrait and 896 × 414 landscape, with safe-area spacing for the notch and home indicator, 16px form text to prevent focus zoom, and 44px minimum primary touch targets. Navigation remains available in both orientations. Dialogs use the available viewport height and scroll internally; wide charts and tables scroll inside their own containers. Page zoom remains available.
+
+The current web release includes the parchment theme, consolidated Stats and recommendation portfolio/lifecycle. Device libraries stay in browser storage and are not published with the app. After an update, close and reopen the Home Screen app or refresh Safari to load the new cached version.

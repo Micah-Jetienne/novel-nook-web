@@ -1,0 +1,53 @@
+/* iPhone layouts: readable form text, reachable controls and notch/home-indicator space. */
+@media(max-width:760px),(pointer:coarse) and (max-width:950px){
+  html{scroll-padding-top:16px;scroll-padding-bottom:110px;-webkit-text-size-adjust:100%}
+  body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+  html[data-platform=web] .sidebar{display:none!important}
+  html[data-platform=web] .main{margin-left:0!important;min-width:0}
+  input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea{font-size:16px!important}
+  input:not([type=checkbox]):not([type=radio]):not([type=hidden]):not([type=range]),select{min-height:44px!important}
+  button:not(.shelf-cover):not(.home-best-row):not(.best-book-row){min-height:44px!important}
+  .text-button,summary{min-height:44px;display:inline-flex;align-items:center}
+  .chart-data>summary{display:flex}
+  .mobile-bottom-nav{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;inset:auto 0 0;z-index:5;border-top:1px solid var(--line);background:#f7f3eef5;padding:6px max(8px,env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));gap:4px}
+  .mobile-bottom-nav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:52px;min-width:0;padding:4px 2px;border:0;border-radius:10px;background:transparent;color:#624934;font-size:12px}
+  .mobile-bottom-nav button[aria-current]{background:var(--plum);color:white}
+  .mobile-bottom-nav svg{width:20px;height:20px}
+  .content{padding-bottom:calc(96px + env(safe-area-inset-bottom))!important}
+  .topbar{padding-left:16px;padding-right:16px;gap:10px}
+  .global-search input{font-size:16px!important}
+  .picker-layout{grid-template-columns:minmax(0,1fr)!important}
+  .picker-controls{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .picker-controls select{min-width:0;width:100%}
+  .overlay{padding:max(8px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left))}
+  .modal,.modal.wide,.finish-modal{width:100%!important;max-height:calc(100dvh - max(8px,env(safe-area-inset-top)) - max(8px,env(safe-area-inset-bottom)))!important}
+  .modal-body{min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .modal-head{padding:14px 16px}.modal-body{padding:16px}.modal-foot{padding:12px 16px;gap:8px}
+  .modal-foot .spacer{min-width:0}
+  .toast{bottom:calc(82px + env(safe-area-inset-bottom));max-height:40dvh;overflow-y:auto}
+  .table-wrap,.genre-quadrant-scroll{overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+}
+@media(pointer:coarse) and (min-width:761px) and (max-width:950px){
+  .topbar{height:72px}.mobile-bottom-nav button{height:44px;flex-direction:row;gap:8px}
+  .content{padding:20px 20px calc(80px + env(safe-area-inset-bottom))!important}
+}
+@media(max-width:760px),(pointer:coarse) and (max-width:950px){
+  .genre-quadrant-scroll{contain:content;max-width:100%;min-width:0}
+  .chart-data:not([open])>:not(summary){display:none}
+}
+@media(max-width:760px),(pointer:coarse) and (max-width:950px){
+  .insight-grid{overflow:hidden}
+}
+@media(max-width:760px){
+  .topbar{display:grid;grid-template-columns:minmax(0,1fr) auto;height:auto;min-height:0;padding:12px 16px;gap:8px 10px}
+  .topbar .page-heading{grid-column:1/-1;min-width:0}.topbar .page-title{font-size:20px;line-height:1.3}
+  .topbar .global-search{width:100%;min-width:0;max-width:none;order:0}
+  .topbar .global-search input{width:100%;height:44px}
+  .topbar>.primary{order:0}.topbar .mobile-import{display:none}
+  .parchment-banner.parchment-has-books>.parchment-banner-books{display:none!important}
+  .parchment-banner.parchment-has-books{min-height:0!important;padding:22px!important}
+  .month-breakdown{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .month-card{padding:12px}.month-spend{font-size:20px}.month-target input{min-width:0;width:100%}
+  .deals-panel .data-table{min-width:560px}.deals-panel .table-wrap{max-width:100%;overflow-x:auto}
+  .wishlist-form-grid .wish-wide{grid-column:1/-1}
+}

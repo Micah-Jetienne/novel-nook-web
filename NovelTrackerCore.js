@@ -10,7 +10,7 @@
     agerating:'ageRating', country:'country', year:'year', characters:'characters', atmosphere:'atmosphere', writing:'writing', plot:'plot', pacing:'pacing',
     worldbuilding:'worldbuilding', enjoyment:'enjoyment', score:'score', goodreads:'goodreads', scoreband:'scoreBand', momentum:'momentum', acquired:'acquired', cost:'cost',
     merchant:'merchant', status:'status', count:'count', pagesread:'pagesRead', daystofin:'daysToFin', id:'workbookId', detailedstart:'detailedStart', detailedfinish:'detailedFinish',
-     yearcount:'yearCount', pagebracket:'pageBracket', avgdays:'avgDays', finishrank:'finishRank', burnoutrisk:'burnoutRisk', booknotes:'bookNotes', authornotes:'authorNotes', readingbandwidth:'readingBandwidth'
+     yearcount:'yearCount', pagebracket:'pageBracket', avgdays:'avgDays', finishrank:'finishRank', sortvolume:'sortVolume', burnoutrisk:'burnoutRisk', booknotes:'bookNotes', authornotes:'authorNotes', readingbandwidth:'readingBandwidth'
   };
   const READING_BANDWIDTH = Object.freeze({ Free: 0.75, Normal: 1, Busy: 1.25, Swamped: 1.5 });
   const normKey = value => String(value ?? '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -19,9 +19,12 @@
   const FRACTIONAL_DATA_KEY = /(score|rating|goodreads|cost|price|money|spend|budget|discount|weight|average|avg|ratio|rate|correlation|index|stamina|confidence|accuracy|trust|momentum|lift|success|satisfaction|variance|percent|percentage)/i;
   const DATE_DATA_KEY = /(date|time|timestamp)/i;
   function roundTwo(value) { const number=Number(value);return Number.isFinite(number)?Number((Math.round((number+Number.EPSILON*Math.sign(number)*Math.abs(number))*100)/100).toFixed(2)):value; }
-  function roundDataNumbers(value, key = '') {
-    if (Array.isArray(value)) return value.map(item => roundDataNumbers(item, key));
-    if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([childKey, child]) => [childKey, roundDataNumbers(child, childKey)]));
+  const EXACT_DATA_KEYS = new Set(['engineConfiguration', 'engineEvaluations', 'recommendationSnapshots', 'recommendationEvents', 'readingAttempts']);
+  function roundDataNumbers(value, key = '', preservePrecision = false) {
+    preservePrecision = preservePrecision || EXACT_DATA_KEYS.has(key);
+    if (Array.isArray(value)) return value.map(item => roundDataNumbers(item, key, preservePrecision));
+    if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([childKey, child]) => [childKey, roundDataNumbers(child, childKey, preservePrecision)]));
+    if (preservePrecision) return value;
     if (DATE_DATA_KEY.test(key) || key === 'scoreExact') return value;
     if (typeof value === 'number') return roundTwo(value);
     if (typeof value !== 'string') return value;
@@ -63,13 +66,17 @@
       if (mapped && !(mapped in out)) out[mapped] = value;
     }
     out.title = text(out.title) || 'Untitled book';
+    if (!out.engineSeriesKey && text(source['THE BOOKS'])) out.engineSeriesKey = text(source['THE BOOKS']);
     out.author = text(out.author);
-    out.id = text(out.id || out.workbookId) || `book-${index + 1}-${hash(out.title + out.author)}`;
+    out.id = text(out.id || out.workbookId) || `book-${index + 1}-${hash([out.title,out.author,out.volumes||'',out.series||''].join('|'))}`;
     for (const key of ['dateBought', 'dateStarted', 'dateFinished']) out[key] = excelDate(out[key]);
     for (const key of ['detailedStart', 'detailedFinish']) out[key] = excelDateTime(out[key]);
     out.workbookStatus = text(out.workbookStatus || out.status);
     if (out.workbookStatus === 'Favourite' && out.isFavourite == null) out.isFavourite = true;
-    out.scoreExact = Number.isFinite(Number(out.scoreExact)) ? Number(out.scoreExact) : (Number.isFinite(Number(out.score)) ? Number(out.score) : '');
+    // Number('') and Number(null) are zero. Missing ratings must stay missing,
+    // including when a backup contains an empty scoreExact and a valid SCORE.
+    const scoreNumber = value => typeof value !== 'boolean' && text(value) !== '' && Number.isFinite(Number(value)) ? Number(value) : null;
+    out.scoreExact = scoreNumber(out.scoreExact) ?? scoreNumber(out.score) ?? '';
     out.score = text(out.score);
     out.scoreBand = text(out.scoreBand) || scoreBand(out.score);
     out.readingStatus = statusOf(out);
@@ -209,14 +216,14 @@
     if (!previous.title && book.title && !book.dateBought) book.dateBought = day;
     const reading = statusOf(book) === 'Reading';
     const wasReading = truthy(previous.reading);
-    if (reading && !wasReading) { book.dateStarted = day; book.detailedStart = timestamp; }
-    if (!reading && wasReading) { book.dateStarted = ''; book.detailedStart = ''; }
+    if (reading && !wasReading) { if (!book.dateStarted) book.dateStarted = day; if (!book.detailedStart && book.dateStarted === day) book.detailedStart = timestamp; }
+    if (!reading && wasReading && !['Read', 'DNF'].includes(statusOf(book))) { book.dateStarted = ''; book.detailedStart = ''; }
     book.reading = reading ? '1' : '0';
     const readingState = statusOf(book);
     const finished = ['Read', 'DNF'].includes(readingState);
     book.completed = readingState === 'Read' && !!book.dateStarted && !!book.dateFinished ? '1' : '0';
     const wasFinished = truthy(previous.finished);
-    if (finished && (!wasFinished || !book.dateFinished)) { book.dateFinished = day; book.detailedFinish = timestamp; }
+    if (finished && (!wasFinished || !book.dateFinished)) { if (!book.dateFinished) book.dateFinished = day; if (!book.detailedFinish && book.dateFinished === day) book.detailedFinish = timestamp; }
     if (!finished && wasFinished) { book.dateFinished = ''; book.detailedFinish = ''; }
     book.finished = finished ? '1' : '0';
     return book;
@@ -251,7 +258,7 @@
   }
   function eligible(book, history, mode, role) {
     const unavailable = ['Sold', 'Unhauled', 'Loaned Out'].includes(collectionStatusOf(book)) || ['Blocked','DNF'].includes(statusOf(book));
-    const priorDecline = (history || []).some(x => x.bookId === book.id && x.mode === mode && x.role === role && (x.action || 'Declined') === 'Declined');
+    const priorDecline = (history || []).some(x => !x.restored && x.bookId === book.id && x.mode === mode && x.role === role && (x.action || 'Declined') === 'Declined');
     // The workbook uses an empty finish date as the recommendation gate. A current
     // reading record can therefore be suggested as the next volume to continue.
     return !text(book?.dateFinished) && !unavailable && !priorDecline;
@@ -538,8 +545,8 @@
     const publisherCount = new Set(finished.map(book => text(book.publisher).toLowerCase()).filter(Boolean)).size;
     const favorites = finished.filter(book => truthy(book.isFavourite)).length;
     const unreadCount = (books || []).filter(book => statusOf(book) === 'On Hold' && !['Sold', 'Unhauled', 'Loaned Out'].includes(collectionStatusOf(book))).length;
-    const startEvents = (recommendationHistory || []).filter(event => event.action === 'Started').length;
-    const decisionEvents = (recommendationHistory || []).filter(event => ['Started', 'Declined'].includes(event.action)).length;
+    const startEvents = (recommendationHistory || []).filter(event => !event.restored && event.action === 'Started').length;
+    const decisionEvents = (recommendationHistory || []).filter(event => !event.restored && ['Started', 'Declined'].includes(event.action)).length;
     const completedRecommendations = finished.filter(book => truthy(book.recommended)).length;
     const recommendedBooks = (books || []).filter(book => truthy(book.recommended));
     const recommendationAverage = average(finished.filter(book => truthy(book.recommended)).map(book => numeric(book.score)).filter(Boolean));
@@ -590,18 +597,52 @@
     const headers = rows.shift().map(x => x.replace(/^\uFEFF/, '').trim());
     return rows.filter(r => r.some(v => v.trim())).map(r => Object.fromEntries(headers.map((h, i) => [h, r[i] ?? ''])));
   }
+  function importBookPatch(item) {
+    const patch = { ...item };
+    for (const [key, value] of Object.entries(item || {})) {
+      const mapped = HEADER_MAP[normKey(key)];
+      if (mapped && !(mapped in patch)) patch[mapped] = value;
+    }
+    return patch;
+  }
+  function importBookMatch(existing, item) {
+    const patch = importBookPatch(item);
+    const id = text(patch.id || patch.workbookId);
+    const exact = id && existing.find(book => text(book.id) === id || text(book.workbookId) === id);
+    if (exact) return exact;
+    const same = (a, b) => text(a).toLowerCase() === text(b).toLowerCase();
+    const matches = existing.filter(book => same(book.title, patch.title) && same(book.author, patch.author) &&
+      same(book.volumes, patch.volumes));
+    if (matches.length > 1) throw new Error(`Ambiguous import match for "${patch.title}" (${patch.volumes || 'no volume'}). Use saved book IDs to identify the correct record.`);
+    return matches[0] || null;
+  }
   function mergeBooks(existing, incoming) {
-    const map = new Map((existing || []).map(b => [String(b.id), b]));
-    const titleKey = b => `${text(b.title).toLowerCase()}|${text(b.author).toLowerCase()}`;
-    const titleIndex = new Map((existing || []).map(b => [titleKey(b), b]));
+    // Work on a copy so a later ambiguous match cannot partially change the library.
+    const result = (existing || []).map(book => ({ ...book }));
     (incoming || []).forEach((item, i) => {
-      const book = normalizeBook(item, i);
-      const old = map.get(String(book.id)) || titleIndex.get(titleKey(book));
-      const merged = old ? { ...old, ...book, id: old.id } : book;
-      map.set(String(merged.id), merged);
-      titleIndex.set(titleKey(merged), merged);
+      const patch = importBookPatch(item);
+      const old = importBookMatch(result, patch);
+      if ('status' in patch && !('workbookStatus' in patch)) patch.workbookStatus = patch.status;
+      const combined = { ...(old || {}), ...patch };
+      if (old) combined.id = old.id;
+      const legacyStatus = text(patch.workbookStatus || patch.status);
+      const collectionStatus = ['Sold','Unhauled','Owned','Borrowed','Loaned Out'].includes(legacyStatus);
+      const readingStatus = legacyStatus && !collectionStatus && legacyStatus !== 'Favourite';
+      if (!('readingStatus' in patch) && (readingStatus || ['reading','finished','completed'].some(key => key in patch))) {
+        combined.readingStatus = statusOf(patch);
+      }
+      if (!('collectionStatus' in patch) && collectionStatus) {
+        combined.collectionStatus = collectionStatusOf(patch);
+      }
+      if ('score' in patch && !('scoreExact' in patch)) combined.scoreExact = patch.score;
+      const book = normalizeBook(combined, i);
+      if (old) result[result.indexOf(old)] = book;
+      else {
+        while (result.some(row => row.id === book.id)) book.id += '-new';
+        result.push(book);
+      }
     });
-    return [...map.values()];
+    return result;
   }
   function readingProfile(books = []) {
     const finished = (books || []).filter(isComplete);
@@ -630,13 +671,17 @@
     const dropped = (books || []).filter(b => statusOf(b) === 'DNF').length;
     return started ? dropped / started : 0;
   }
-  function emptyState(seed = []) { return { schemaVersion: 2, books: (seed || []).map(normalizeBook), quotes: [], shopping: [], discounts: [], budget: 0, mode: 'NEUTRAL', recommendationHistory: [], draftPickerHistory: [], draftPickerRounds: {}, sourceTables: {} }; }
+  function emptyState(seed = []) { return { schemaVersion: 3, books: (seed || []).map(normalizeBook), quotes: [], shopping: [], discounts: [], budget: 0, mode: 'NEUTRAL', recommendationHistory: [], recommendationSnapshots: [], recommendationEvents: [], readingAttempts: [], engineEvaluations: [], draftPickerHistory: [], draftPickerRounds: {}, sourceTables: {} }; }
   function migrateState(value, seed = []) {
     if (Array.isArray(value)) return roundDataNumbers({ ...emptyState(seed), books: value.map(normalizeBook) });
-    if (value && typeof value === 'object') return roundDataNumbers({ ...emptyState(seed), ...value, books: (Array.isArray(value.books) ? value.books : seed).map(normalizeBook), schemaVersion: 2 });
+    if (value && typeof value === 'object') {
+      const migrated = { ...emptyState(seed), ...value, books: (Array.isArray(value.books) ? value.books : seed).map(normalizeBook), schemaVersion: 3 };
+      for (const key of ['recommendationSnapshots','recommendationEvents','readingAttempts','engineEvaluations','recommendationHistory']) if (!Array.isArray(migrated[key])) migrated[key] = [];
+      return roundDataNumbers(migrated);
+    }
     return emptyState(seed);
   }
-  const api = { STATUSES, MODES, ROLES, READING_BANDWIDTH, normalizeBook, statusOf, collectionStatusOf, isComplete, scoreBand, scoreBandName, weightedScore, readingMetrics, readingProfile, engineMode, dashboardData, randomDraftPool, randomDraftPick, bestBooks, roundDataNumbers, applyReadingEvents, excelDateTime, dropRisk, eligible, candidates, recommendationScore, recommendationLabel, parseCSV, mergeBooks, emptyState, migrateState, numeric, excelDate };
+  const api = { STATUSES, MODES, ROLES, READING_BANDWIDTH, normalizeBook, statusOf, collectionStatusOf, isComplete, scoreBand, scoreBandName, weightedScore, readingMetrics, readingProfile, engineMode, dashboardData, randomDraftPool, randomDraftPick, bestBooks, roundDataNumbers, applyReadingEvents, excelDateTime, dropRisk, eligible, candidates, recommendationScore, recommendationLabel, parseCSV, importBookMatch, mergeBooks, emptyState, migrateState, numeric, excelDate };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.NovelTrackerCore = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

@@ -1,0 +1,73 @@
+/* Desktop refinement: the covers carry the colour; controls carry the structure. */
+html[data-platform=desktop]{--desktop-space:24px;--desktop-rule:#dfd7cd;--desktop-secondary:#6d6157}
+html[data-platform=desktop] .topbar{gap:20px}
+html[data-platform=desktop] .topbar .page-title{font-size:24px;font-weight:650;letter-spacing:-.45px;line-height:1.2}
+html[data-platform=desktop] .topbar .page-subtitle{font-size:12px;color:var(--desktop-secondary);margin-top:5px}
+html[data-platform=desktop] .content{padding-top:24px}
+html[data-platform=desktop] .eyebrow{display:none}
+html[data-platform=desktop] .navlabel{font-size:11px;text-transform:none;letter-spacing:0;font-weight:650;color:var(--desktop-secondary)}
+html[data-platform=desktop] .nav button{transition:background-color .15s,color .15s;min-height:44px}
+html[data-platform=desktop] .nav button.active{box-shadow:none!important}
+html[data-platform=desktop] .parchment-library-banner.parchment-banner{
+  min-height:116px;padding:20px 26px!important;margin-bottom:22px!important;
+  grid-template-columns:minmax(0,1fr) 220px;border-radius:18px!important;
+  box-shadow:0 4px 12px #5e42260a!important;
+}
+html[data-platform=desktop] .parchment-library-banner h2{font-size:23px;line-height:1.25;letter-spacing:-.35px;margin:0 0 7px;font-weight:650}
+html[data-platform=desktop] .parchment-library-banner p{font-size:13px;margin:0}
+html[data-platform=desktop] .parchment-library-banner .parchment-banner-books{min-height:90px;padding:0}
+html[data-platform=desktop] .parchment-library-banner .parchment-banner-books .cover{width:50px!important;height:78px!important;margin-left:-4px;box-shadow:0 5px 10px #49332224!important}
+html[data-platform=desktop] .parchment-library-banner .parchment-banner-books::before,
+html[data-platform=desktop] .parchment-library-banner .parchment-banner-books::after{display:none}
+html[data-platform=desktop] .library-frozen-controls{padding:12px 0;margin-top:0;margin-bottom:14px;box-shadow:none;border-bottom:1px solid var(--desktop-rule)}
+html[data-platform=desktop] .library-toolbar{gap:12px}
+html[data-platform=desktop] .library-toolbar .filter-tabs{display:grid;gap:9px;flex-basis:100%}
+html[data-platform=desktop] .library-page .filter-group{gap:7px;align-items:center}
+html[data-platform=desktop] .library-page .filter-group>span{min-width:74px;font-size:12px;color:var(--desktop-secondary)}
+html[data-platform=desktop] .library-page .filter-tabs button{min-height:36px;padding:6px 11px;font-size:12px;transform:none;transition:background-color .15s,border-color .15s;color:var(--desktop-secondary)}
+html[data-platform=desktop] .library-page .filter-tabs button.active::after{display:none}
+html[data-platform=desktop] .library-page .filter-tabs button.active{color:#fff;box-shadow:inset 0 1px 0 #ffffff40}
+html[data-platform=desktop] .reading-status-help{margin:0 0 12px}
+html[data-platform=desktop] .library-toolbar>select.select{height:40px;min-height:40px;padding-top:8px;padding-bottom:8px;font-size:12px}
+html[data-platform=desktop] .result-count{font-variant-numeric:tabular-nums;color:var(--desktop-secondary)}
+html[data-platform=desktop] .library-view-switcher button{min-height:36px!important;height:36px;width:36px}
+html[data-platform=desktop] .library-card{transition:box-shadow .18s,border-color .18s;animation:none}html[data-platform=desktop] .library-card:focus-visible{transform:none}@media (hover: hover) and (pointer: fine){
+html[data-platform=desktop] .library-card:hover,html[data-platform=desktop] .library-card:focus-visible{transform:none}}
+html[data-platform=desktop] .library-card-art .cover{transition:box-shadow .18s}@media (hover: hover) and (pointer: fine){
+html[data-platform=desktop] .library-card:hover .library-card-art .cover{transform:none}}
+html[data-platform=desktop] .library-card-title{line-height:1.35;letter-spacing:-.15px}
+html[data-platform=desktop] .library-card-author{color:var(--desktop-secondary)}
+html[data-platform=desktop] :is(.library-pages,.library-card-finished,.library-card-foot){font-variant-numeric:tabular-nums}
+html[data-platform=desktop] .modal-head{border-bottom:1px solid var(--desktop-rule)}
+html[data-platform=desktop] .modal-title{font-weight:650;letter-spacing:-.3px}
+html[data-platform=desktop] .detail-top{padding-bottom:20px;margin-bottom:20px;border-bottom:1px solid var(--desktop-rule)}
+html[data-platform=desktop] .detail-title{letter-spacing:-.35px;line-height:1.25}
+html[data-platform=desktop] .detail-heading{font-size:16px;font-weight:650;letter-spacing:0;text-transform:none}
+html[data-platform=desktop] .detail-section{margin:0;padding:0 0 20px;border-bottom:0}
+html[data-platform=desktop] .detail-cell label{font-size:12px;letter-spacing:0;text-transform:none;color:var(--desktop-secondary)}
+html[data-platform=desktop] .detail-cell span{font-size:14px;overflow-wrap:anywhere}
+html[data-platform=desktop] .detail-disclosure{border-top:1px solid var(--desktop-rule);margin:0;padding:0}
+html[data-platform=desktop] .detail-disclosure>summary{font-size:14px;line-height:1.5;min-height:44px;padding:13px 0;align-content:center}
+html[data-platform=desktop] .detail-note{max-width:72ch;line-height:1.65}
+html[data-platform=desktop] .modal-foot{gap:10px;background:#faf7f2;flex-wrap:wrap}
+html[data-platform=desktop] .modal-foot .danger{background:transparent;border-color:transparent;color:#903e37;box-shadow:none}
+html[data-platform=desktop] :is(.primary,.secondary,.quiet,.danger){min-height:40px}
+html[data-platform=desktop] .editor-section>summary{min-height:44px;align-content:center}
+html[data-platform=desktop] .field label{letter-spacing:0;text-transform:none}
+html[data-platform=desktop] .best-book-open{font-weight:600;line-height:1.4}
+html[data-platform=desktop] .best-book-controls{gap:12px;align-items:end}
+html[data-platform=desktop] .best-book-row{transition:background-color .15s}
+@media(max-width:1000px){
+  html[data-platform=desktop] .parchment-library-banner.parchment-banner{grid-template-columns:minmax(0,1fr) 170px;padding:18px 20px!important}
+  html[data-platform=desktop] .parchment-library-banner .parchment-banner-books .cover{width:40px!important;height:63px!important}
+  html[data-platform=desktop] .library-page .filter-group>span{flex-basis:100%;margin-bottom:2px}
+  html[data-platform=desktop] .topbar{gap:12px}
+}
+@media(prefers-reduced-motion:reduce){
+  html[data-platform=desktop] :is(.nav button,.library-card,.library-card-art .cover,.library-page .filter-tabs button,.best-book-row){transition:none}
+}
+/* Compact list rows use their content height, rather than grid-card placeholders. */
+html[data-platform=desktop] .library-list .library-card{min-height:0!important;height:auto;content-visibility:visible;contain-intrinsic-size:none;align-content:start}
+html[data-platform=desktop] .library-list .library-card-title{min-height:0}
+html[data-platform=desktop] .library-list .library-card-genre{width:max-content;max-width:100%}
+html[data-platform=desktop] .library-list .library-card-art{height:auto}

@@ -40,15 +40,15 @@
 .life-day-detail form>label span{font-size:11px;color:#91877b;font-weight:400}
 .life-day-detail :is(select,textarea){border:1px solid #e7dfd4;background:#f7f3ed;border-radius:12px;padding:12px 14px;box-shadow:inset 0 1px 2px #48372503;transition:border-color .18s,background-color .18s,box-shadow .18s}
 .life-day-detail select{appearance:none;padding-right:38px;min-height:46px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='16' viewBox='0 0 14 16' fill='none' stroke='%23867968' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 5 3-3 3 3M4 11l3 3 3-3'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
-.life-day-detail textarea{min-height:112px;line-height:1.65;resize:vertical}
-.life-day-detail :is(select,textarea):hover{border-color:#cfc1ad;background-color:#faf7f1}
+.life-day-detail textarea{min-height:112px;line-height:1.65;resize:vertical}@media (hover: hover) and (pointer: fine){
+.life-day-detail :is(select,textarea):hover{border-color:#cfc1ad;background-color:#faf7f1}}
 .life-day-detail :is(select,textarea):focus-visible{outline:2px solid #b59a733f!important;outline-offset:1px;border-color:#ae9065;background-color:#fffdf8;box-shadow:0 0 0 3px #b59a7312!important}
 .life-reflection-actions{margin-top:16px}.life-moods button{background:#f5f0e8;border-color:#e4dbcd;box-shadow:none}.life-moods button.selected{background:#e9ddca;border-color:#ccb695}
 /* Match the weekly intention to the journal's quiet native-style controls. */
 .life-week-shelf>label{font-size:13px;font-weight:600;color:#514a42}
 .life-intention-controls{gap:12px;margin-top:8px}
-.life-intention-controls select{appearance:none;min-height:46px;padding:12px 38px 12px 14px;border:1px solid #e7dfd4;border-radius:12px;background:#f7f3ed url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='16' viewBox='0 0 14 16' fill='none' stroke='%23867968' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 5 3-3 3 3M4 11l3 3 3-3'/%3E%3C/svg%3E") no-repeat right 14px center;box-shadow:inset 0 1px 2px #48372503;transition:border-color .18s,background-color .18s,box-shadow .18s}
-.life-intention-controls select:hover{border-color:#cfc1ad;background-color:#faf7f1}
+.life-intention-controls select{appearance:none;min-height:46px;padding:12px 38px 12px 14px;border:1px solid #e7dfd4;border-radius:12px;background:#f7f3ed url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='16' viewBox='0 0 14 16' fill='none' stroke='%23867968' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 5 3-3 3 3M4 11l3 3 3-3'/%3E%3C/svg%3E") no-repeat right 14px center;box-shadow:inset 0 1px 2px #48372503;transition:border-color .18s,background-color .18s,box-shadow .18s}@media (hover: hover) and (pointer: fine){
+.life-intention-controls select:hover{border-color:#cfc1ad;background-color:#faf7f1}}
 .life-intention-controls select:focus-visible{outline:2px solid #b59a733f!important;outline-offset:1px;border-color:#ae9065;background-color:#fffdf8;box-shadow:0 0 0 3px #b59a7312!important}
 .life-intention-controls>span{font-size:12px;color:#91877b}
 .life-intention-progress{height:6px;background:#eee6da;margin-top:20px;border-radius:8px}

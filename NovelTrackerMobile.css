@@ -108,7 +108,6 @@
 @media(hover:none){
   .finish-book,.close-action{transition:none!important}
   .finish-indicator,.library-card-actions,.book-actions,.wish-remove{opacity:1!important;visibility:visible!important}
-  .library-card:hover,.wish-card:hover,.home-best-row:hover,.best-book-row:hover{transform:none!important}
 }
 @media(max-width:760px){
   .wrapped-shelf-preview{grid-template-columns:minmax(0,1fr);padding:20px}
@@ -121,4 +120,42 @@
   .wrapped-hero{grid-template-columns:minmax(0,1fr)!important;padding:24px!important;gap:16px}
   .wrapped-hero>*{min-width:0;max-width:100%;grid-column:1!important;grid-row:auto!important}
   .wrapped-year{width:100%}
+}
+/* Edit on a phone: one field at a time, with flat groups and breathing space. */
+@media(max-width:760px){
+  #book-form .form-grid{gap:22px!important}
+  #book-form .field{min-width:0;gap:8px}
+  #book-form .reading-setup-panel,#book-form .reading-progress-panel{padding:0;background:transparent;border:0;box-shadow:none}
+  #book-form .reading-setup-grid,#book-form .reading-progress-grid{gap:22px}
+  #book-form .editor-section{padding-top:24px;margin-top:28px}
+  #book-form .mobile-custom-value:not([hidden]){margin-top:10px}
+  #book-form select{padding-right:38px!important}
+  #book-form .checkbox-group>div{display:flex;flex-direction:column;gap:12px}
+}
+@media(max-width:760px){
+  /* WebKit's macOS-style popup sizing can ignore padding without a CSS appearance. */
+  select{-webkit-appearance:none;appearance:none;display:block;box-sizing:border-box;line-height:24px!important;min-height:48px!important;padding-right:38px!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23665a50' stroke-width='1.8'/%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:right 12px center!important;background-size:16px!important}
+}
+@media(max-width:760px){
+  /* A tall filter stack must leave the phone viewport as the reader scrolls. */
+  .library-page .library-frozen-controls{position:static!important;top:auto!important;z-index:auto;box-shadow:none;margin-top:0}
+  .library-page .library-grid-shell{max-height:none!important;overflow:visible!important}
+}
+
+/* Platform behaviour: controls respond on contact, content remains selectable. */
+html{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;overscroll-behavior:none}
+body{overscroll-behavior:none}
+.app,.main{min-height:100dvh}
+:is(button,a,[role=button],summary,input[type=checkbox],input[type=radio]){touch-action:manipulation}
+:is(button,[role=button],summary,.filter-tab,.mobile-bottom-nav a){-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+:is(button,[role=button],summary):not(:disabled):active{opacity:.76;transition:opacity 100ms ease-out}
+:is(.modal-body,.lookup-results,.notification-list,.mobile-more-menu){overscroll-behavior:contain}
+@media(pointer:coarse){
+  input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea{font-size:16px!important}
+}
+@media(max-width:760px),(pointer:coarse) and (max-width:950px){
+  /* A landscape notch must not cover the header or the sheet's controls. */
+  .topbar{padding-left:calc(16px + env(safe-area-inset-left,0px));padding-right:calc(16px + env(safe-area-inset-right,0px))}
+  .modal-head,.modal-body,.modal-foot{padding-left:calc(16px + env(safe-area-inset-left,0px));padding-right:calc(16px + env(safe-area-inset-right,0px))}
+  .mobile-bottom-nav{background:#faf7f0}
 }

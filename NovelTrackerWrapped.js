@@ -65,19 +65,25 @@
   }
   const lastMonth=year=>String(year)===String(new Date().getFullYear())?new Date().getMonth()+1:12;
   function session(){const year=String(ui.wrappedYear||new Date().getFullYear());ui.wrappedPlay=ui.wrappedPlay||{};if(!ui.wrappedPlay[year])ui.wrappedPlay[year]={month:lastMonth(year),playing:false,quiz:0,answers:{},note:0,turned:false,revealed:{},round:0,champion:null,animate:''};return ui.wrappedPlay[year];}
-  const current=()=>{const s=session();if(s.quizSeed==null)s.quizSeed=Math.floor(Math.random()*4294967296);return collect(model,String(ui.wrappedYear||new Date().getFullYear()),s.quizSeed);};
+  let collectionCache=null;
+  const current=()=>{
+    const s=session();if(s.quizSeed==null)s.quizSeed=Math.floor(Math.random()*4294967296);
+    const year=String(ui.wrappedYear||new Date().getFullYear()),inputs=[model.books,model.readingLife,model.recommendationSnapshots,model.readingAttempts,model.recommendationEvents,year,s.quizSeed];
+    if(collectionCache&&inputs.every((value,index)=>value===collectionCache.inputs[index]))return collectionCache.data;
+    const data=collect(model,year,s.quizSeed);collectionCache={inputs,data};return data;
+  };
   let timer=null;
   function stop(){if(timer!==null){clearInterval(timer);timer=null;}if(typeof ui!=='undefined'&&ui.wrappedPlay)Object.values(ui.wrappedPlay).forEach(s=>s.playing=false);}
   function refresh(){const container=document.querySelector('.wrapped-interactive'),active=document.activeElement,action=active?.dataset?.action,book=active?.dataset?.book,id=active?.id;if(container)renderCards(container);bind();const target=id?document.getElementById(id):action?Array.from(document.querySelectorAll('.wrapped-content [data-action]')).find(el=>el.dataset.action===action&&el.dataset.book===book):null;target?.focus({preventScroll:true});}
   function scrub(value){stop();const s=session();s.month=Math.max(1,Math.min(lastMonth(current().year),Number(value)||1));s.animate='shelf';refresh();s.animate='';}
-  function play(){stop();const s=session();s.month=1;s.animate='shelf';const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;if(reduced){refresh();s.animate='';return;}s.playing=true;refresh();s.animate='';const year=current().year;timer=setInterval(()=>{if(ui.page!=='NookWrapped'||current().year!==year){stop();return;}if(s.month>=lastMonth(year)){stop();refresh();return;}s.month++;s.animate='shelf';refresh();s.animate='';},850);}
+  function play(){stop();const s=session();s.month=1;s.animate='shelf';const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches||document.documentElement?.dataset.motionInput==='keyboard';if(reduced){s.month=lastMonth(current().year);refresh();s.animate='';return;}s.playing=true;refresh();s.animate='';const year=current().year;timer=setInterval(()=>{if(ui.page!=='NookWrapped'||current().year!==year){stop();return;}if(s.month>=lastMonth(year)){stop();refresh();return;}s.month++;s.animate='shelf';refresh();s.animate='';},1400);}
   function answer(id){const d=current(),s=session(),q=d.questions[s.quiz%d.questions.length];if(!q||!q.options.some(b=>b.id===id)||s.answers[q.id])return;s.answers[q.id]=id;s.animate='answer';refresh();s.animate='';}
-  function quizMove(delta){const d=current(),s=session();s.quiz=(s.quiz+delta+d.questions.length)%Math.max(1,d.questions.length);refresh();}
+  function quizMove(delta){const d=current(),s=session();s.quiz=(s.quiz+delta+d.questions.length)%Math.max(1,d.questions.length);s.animate='question';refresh();s.animate='';}
   function quizReplay(){const s=session();s.quiz=0;s.answers={};s.quizSeed=Math.floor(Math.random()*4294967296);refresh();}
   function choose(id){const d=current(),s=session(),candidate=d.books[s.round+1],champion=d.books.find(b=>b.id===s.champion)||d.books[0];if(!candidate||![champion.id,candidate.id].includes(id))return;s.champion=id;s.round++;s.animate='winner';refresh();s.animate='';}
   function restart(){const s=session();s.champion=null;s.round=0;refresh();}
   function saveWinner(){const d=current(),s=session(),book=d.books.find(b=>b.id===s.champion)||(d.books.length===1?d.books[0]:null);if(!book||s.round<d.books.length-1)return;model.wrappedPreferences=model.wrappedPreferences&&typeof model.wrappedPreferences==='object'&&!Array.isArray(model.wrappedPreferences)?model.wrappedPreferences:{};model.wrappedPreferences[d.year]={...(model.wrappedPreferences[d.year]||{}),bookOfYearId:book.id};persist(false);s.animate='winner';refresh();s.animate='';toast('Your personal favourite is saved. Its rating is unchanged.');}
-  function noteMove(delta){const d=current(),s=session();s.note=(s.note+delta+d.notes.length)%Math.max(1,d.notes.length);s.turned=false;refresh();}
+  function noteMove(delta){const d=current(),s=session();s.note=(s.note+delta+d.notes.length)%Math.max(1,d.notes.length);s.turned=false;s.animate='note';refresh();s.animate='';}
   function flip(){const s=session();s.turned=!s.turned;s.animate='paper';refresh();s.animate='';}
   function reveal(id){const s=session();s.revealed=s.revealed||{};s.revealed[id]=!s.revealed[id];s.animate='answer';refresh();s.animate='';}
   function openBook(id){stop();if(model.books.some(b=>b.id===id))showBook(id);}
@@ -97,7 +103,27 @@
     const content=container.closest('.wrapped-content');
     const monthly=content.querySelector('.wrapped-months')?.closest('.panel');
     const awards=content.querySelector('.award-grid')?.closest('.panel');
+    const previousShelf=container.querySelector('.wi-unfolding-shelf');
+    const previousBooks=new Map(Array.from(previousShelf?.querySelectorAll('.wrapped-cover-choice')||[],book=>[book.dataset.book,book]));
+    if(session().playing&&session().month===1&&session().animate==='shelf')previousBooks.clear();
     container.innerHTML=markup();
+    const shelf=container.querySelector('.wi-unfolding-shelf');
+    const moving=session().animate==='shelf'&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&document.documentElement?.dataset.motionInput!=='keyboard'&&!document.hidden;
+    let arrival=0;
+    shelf.querySelectorAll('.wrapped-cover-choice').forEach(book=>{
+      const previous=previousBooks.get(book.dataset.book);
+      if(previous){book.replaceWith(previous);return;}
+      if(!moving||arrival>=8||typeof book.animate!=='function')return;
+      book.animate([
+        {opacity:0,transform:'translateY(8px) scale(.97)'},
+        {opacity:1,transform:'translateY(0) scale(1)'}
+      ],{duration:260,delay:Math.min(arrival++*40,120),easing:'cubic-bezier(0.23,1,0.32,1)',fill:'backwards'});
+    });
+    const effect=session().animate;
+    if(effect==='question')root.NookUI?.animateFeedback?.(container.querySelector('.wi-question'));
+    if(effect==='note')root.NookUI?.animateFeedback?.(container.querySelector('.wi-note'));
+    if(effect==='answer')root.NookUI?.animateFeedback?.(container.querySelector('.wi-answer')||container.querySelector('.wi-score-pair'));
+    if(effect==='winner')root.NookUI?.animateFeedback?.(container.querySelector('.wi-chosen')||container.querySelector('.wi-duel'));
     const columns=document.createElement('div');columns.className='wi-card-columns';
     const left=document.createElement('div'),right=document.createElement('div');
     left.className=right.className='wi-card-column';
@@ -109,5 +135,6 @@
   }
   function bind(){const el=document.querySelector('.wrapped-content');if(!el)return;const actions={play,pause:()=>{stop();refresh()},answer,choose,'save-winner':saveWinner,restart,'quiz-prev':()=>quizMove(-1),'quiz-next':()=>quizMove(1),'quiz-replay':quizReplay,'note-prev':()=>noteMove(-1),'note-next':()=>noteMove(1),flip,reveal,open:openBook};el.querySelectorAll('[data-action]').forEach(button=>button.onclick=()=>{const action=actions[button.dataset.action];if(action)action(button.dataset.book)});el.querySelector('#wrapped-month-slider')?.addEventListener('change',event=>scrub(event.target.value));}
   function mount(){stop();const content=document.querySelector('.wrapped-content');if(!content||!content.querySelector('.wrapped-metrics'))return;let el=content.querySelector('.wrapped-interactive');if(!el){el=document.createElement('div');el.className='wrapped-interactive';content.querySelector('.wrapped-metrics').after(el);}renderCards(el);bind();const year=String(ui.wrappedYear||new Date().getFullYear());if(year===String(new Date().getFullYear())){const title=content.querySelector('.wrapped-hero h1');if(title)title.textContent=`Your ${year} in stories, so far.`;}}
+  if(typeof document!=='undefined')document.addEventListener?.('visibilitychange',()=>{if(document.hidden)stop()});
   root.NookWrapped={collect,mount,stop,session};
 })(typeof globalThis!=='undefined'?globalThis:this);

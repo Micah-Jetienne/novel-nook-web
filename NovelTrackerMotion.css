@@ -1,0 +1,88 @@
+/* Desktop motion: feedback at the point of interaction, never a page-load obstacle. */
+html[data-platform=desktop]{--ease-out:cubic-bezier(0.23,1,0.32,1);--ease-in-out:cubic-bezier(0.77,0,0.175,1);--motion-fast:140ms;--motion-feedback:200ms;--motion-reveal:260ms}
+html[data-platform=desktop] :is(.nav button,.nav-row,.primary,.secondary,.quiet,.danger,.text-button,.filter-tabs button,.select,.book-item,.recent-row,.home-best-row,.pick-history-book,.purchase-row,.wish-card,.month-card,.recommend-card,.history-row,.shop-stat,.season-tile,.award-card,.wrapped-cover-choice,.life-date,.home-reading-card,.home-reading-card .cover,.best-book-row){transition:transform var(--motion-fast) var(--ease-out)}
+html[data-platform=desktop] :is(.content,.month-card,.year-column i,.month-chart-column i,.wrapped-months i,.gender-column>i,.country-bars>div>i>b,.trend-average,.trend-actual){animation:none!important}
+html[data-platform=desktop] :is(.shop-orbit,.shop-spark,.shop-hero::before,.shop-hero::after,.empty-dice,.result-confetti,.picker-doodle,.wrapped-hero-art::before,.reading-pulse){animation:none!important}
+html[data-platform=desktop] :is(.bar i,.taste-meter i,.home-progress-track i,.shop-progress i,.month-track i,.wrapped-author>i,.year-column i,.month-chart-column i,.life-intention-progress>i,.life-intention-progress>b,.pace-svg circle,.risk-scatter g circle){transition:none}
+html[data-platform=desktop] :is(.trend-average,.trend-actual){stroke-dashoffset:0}
+html[data-platform=desktop] .library-card{transition:transform var(--motion-fast) var(--ease-out);animation:none;transform:translateY(0)}
+html[data-platform=desktop] .library-card-art .cover{transition:none}@media (hover: hover) and (pointer: fine){
+html[data-platform=desktop] .library-card:hover .library-card-art .cover{transform:none}}
+/* One passing glint per hover. The card itself never turns or changes shape. */
+html[data-platform=desktop] .library-card.is-favourite::after{
+  inset:-20% auto -20% -40%;width:28%;height:auto;border-radius:0;filter:none;
+  background:linear-gradient(90deg,transparent 0%,#ffffff00 16%,#ffffff59 38%,#ffffffe6 50%,#ffffff59 62%,#ffffff00 84%,transparent 100%);
+  transform:translateX(-100%) skewX(-18deg);opacity:0;
+  transition:transform 700ms var(--ease-in-out),opacity 140ms ease;
+}
+@media(hover:hover) and (pointer:fine){@media (hover: hover) and (pointer: fine){
+  html[data-platform=desktop]:not([data-motion-input=keyboard]) .library-card.is-favourite:hover::after{
+    transform:translateX(550%) skewX(-18deg);opacity:1;
+  }}
+  /* Leaving resets invisibly{transition:none}@media (hover: hover) and (pointer: fine){
+  /* Leaving resets invisibly, so there is no reverse sweep. */
+  html[data-platform=desktop] .library-card.is-favourite:not(:hover)::after{transition:none}}
+}
+html[data-platform=desktop] :is(.library-card:focus-visible,.library-card:not(*)){transform:none}@media (hover: hover) and (pointer: fine){
+html[data-platform=desktop] :is(.library-card:focus-visible,.library-card:hover){transform:none}}@media (hover: hover) and (pointer: fine){
+html[data-platform=desktop] :is(.wrapped-cover-choice:hover,.wi-unfolding-shelf .wrapped-cover-choice:hover,.shop-stat:hover,.season-tile:hover,.award-card:hover,.home-reading-card:hover,.life-date:hover){transform:none}}
+html[data-platform=desktop] :is(.close-action,.close-action:not(*),.close-action:focus-visible){width:104px;min-width:104px;gap:0;position:relative;transition:transform var(--motion-fast) var(--ease-out)}@media (hover: hover) and (pointer: fine){
+html[data-platform=desktop] :is(.close-action,.close-action:hover,.close-action:focus-visible){width:104px;min-width:104px;gap:0;position:relative;transition:transform var(--motion-fast) var(--ease-out)}}
+html[data-platform=desktop] .close-spin{position:absolute;right:10px;top:50%;width:18px;flex:none;opacity:0;transform:translateY(-50%) rotate(-45deg) scale(.95);transition:opacity var(--motion-fast) ease,transform var(--motion-fast) var(--ease-out)}
+html[data-platform=desktop] .close-action>span:first-child{transition:transform var(--motion-fast) var(--ease-out)}
+html[data-platform=desktop] :is(.finish-book,.finish-book:not(*),.finish-book:focus-visible){position:relative;width:156px;min-width:156px;gap:0;transition:transform var(--motion-fast) var(--ease-out)}@media (hover: hover) and (pointer: fine){
+html[data-platform=desktop] :is(.finish-book,.finish-book:hover,.finish-book:focus-visible){position:relative;width:156px;min-width:156px;gap:0;transition:transform var(--motion-fast) var(--ease-out)}}
+html[data-platform=desktop] .finish-indicator{position:absolute;right:10px;width:20px;flex:none;transition:none}
+html[data-platform=desktop] .finish-check{opacity:0;transform:scale(.95);transition:opacity var(--motion-fast) ease,transform var(--motion-fast) var(--ease-out)}
+html[data-platform=desktop] .finish-ring{stroke-dashoffset:0;opacity:0;transform:scale(.95);transition:opacity var(--motion-fast) ease,transform var(--motion-fast) var(--ease-out)}
+html[data-platform=desktop] .finish-sparkles{display:none}
+html[data-platform=desktop] .finish-book>span:first-child{transition:transform var(--motion-fast) var(--ease-out)}
+html[data-platform=desktop] .battery-load i{width:100%;transform:scaleX(0);transform-origin:left;transition:transform var(--motion-feedback) var(--ease-out)}@media (hover: hover) and (pointer: fine){
+html[data-platform=desktop] .start-book:hover .battery-load i{transform:none}}
+html[data-platform=desktop] .wi-paper-turn{animation:nook-reveal var(--motion-feedback) var(--ease-out) both}
+html[data-platform=desktop] .wi-glint::after{animation:nook-glint var(--motion-reveal) var(--ease-out) both}
+html[data-platform=desktop] .life-stamp{animation:nook-confirm var(--motion-reveal) var(--ease-out) both}
+html[data-platform=desktop] .life-book-arrive{animation:nook-book-arrive var(--motion-reveal) var(--ease-out) both}
+html[data-platform=desktop] :is(.life-month-forward,.life-month-back){animation:none}
+html[data-platform=desktop] .life-celebrating .life-week-day i.read{animation:nook-confirm var(--motion-reveal) var(--ease-out)}
+html[data-platform=desktop] .life-paper-stars i{animation:nook-glint var(--motion-reveal) var(--ease-out) both;animation-delay:0ms}
+html[data-platform=desktop] .picker-result{animation:nook-reveal var(--motion-reveal) var(--ease-out) both}
+html[data-platform=desktop] .draw-button.drawing span{animation:nook-working 700ms linear infinite}
+html[data-platform=desktop] .nav-row.drag-over{animation:none;transform:none}
+html[data-platform=desktop] .toast{transition:opacity var(--motion-feedback) ease,transform var(--motion-feedback) var(--ease-out);animation:none!important}
+@starting-style{html[data-platform=desktop] .toast.show{opacity:0;transform:translate(-50%,8px)}}
+@keyframes nook-reveal{from{opacity:0;transform:translateY(4px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes nook-confirm{from{opacity:.5;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+@keyframes nook-book-arrive{from{opacity:0;transform:translateY(6px) rotate(var(--book-tilt))}to{opacity:1;transform:translateY(0) rotate(var(--book-tilt))}}
+@keyframes nook-glint{0%{opacity:0;transform:scale(.95)}40%{opacity:1}100%{opacity:0;transform:scale(1.05)}}
+@keyframes nook-working{to{transform:rotate(360deg)}}
+@media(hover:hover) and (pointer:fine){@media (hover: hover) and (pointer: fine){
+ html[data-platform=desktop]:not([data-motion-input=keyboard]) .library-card:hover{transform:translateY(-2px)}}@media (hover: hover) and (pointer: fine){
+ html[data-platform=desktop]:not([data-motion-input=keyboard]) .library-list .library-card:hover{transform:translateY(-1px)}}@media (hover: hover) and (pointer: fine){
+ html[data-platform=desktop]:not([data-motion-input=keyboard]) .wrapped-cover-choice:hover{transform:translateY(-2px)}}@media (hover: hover) and (pointer: fine){
+ html[data-platform=desktop]:not([data-motion-input=keyboard]) .close-action:hover>span:first-child{transform:translateX(-5px)}}@media (hover: hover) and (pointer: fine){
+ html[data-platform=desktop]:not([data-motion-input=keyboard]) .close-action:hover .close-spin{opacity:1;transform:translateY(-50%) rotate(0) scale(1)}}@media (hover: hover) and (pointer: fine){
+ html[data-platform=desktop]:not([data-motion-input=keyboard]) .finish-book:hover>span:first-child{transform:translateX(-8px)}}@media (hover: hover) and (pointer: fine){
+ html[data-platform=desktop]:not([data-motion-input=keyboard]) .finish-book:hover :is(.finish-check,.finish-ring){opacity:1;transform:scale(1)}}@media (hover: hover) and (pointer: fine){
+ html[data-platform=desktop]:not([data-motion-input=keyboard]) .start-book:hover .battery-load i{transform:scaleX(1)}}
+}
+@media(hover:none),(pointer:coarse){
+ html[data-platform=desktop] .library-card.is-favourite::after{display:none}
+ html[data-platform=desktop] :is(.close-spin,.finish-indicator){display:none}@media (hover: hover) and (pointer: fine){
+ html[data-platform=desktop] .wrapped-cover-choice:hover{transform:none}}
+}
+html[data-platform=desktop][data-motion-input=keyboard] #root *,
+html[data-platform=desktop][data-motion-input=keyboard] #root *::before,
+html[data-platform=desktop][data-motion-input=keyboard] #root *::after{animation:none!important;transition:none!important}
+html[data-platform=desktop][data-motion-input=keyboard] .library-card.is-favourite::after{display:none}
+@media(prefers-reduced-motion:reduce){
+ html[data-platform=desktop] #root *,html[data-platform=desktop] #root *::before,html[data-platform=desktop] #root *::after{animation:none!important;transition:none!important}@media (hover: hover) and (pointer: fine){
+ html[data-platform=desktop] :is(.library-card:hover,.wrapped-cover-choice:hover,.close-action:hover>span:first-child,.finish-book:hover>span:first-child){transform:none!important}}
+ html[data-platform=desktop] .library-card.is-favourite::after{display:none}
+ html[data-platform=desktop] .toast{transition:opacity 140ms ease!important}
+}
+/* Override the older measured-width finish control without a layout change on hover. */
+html[data-platform=desktop] .modal-foot .finish-action-slot :is(.finish-book,.finish-book:not(*),.finish-book:focus-visible){width:164px!important;min-width:164px!important}@media (hover: hover) and (pointer: fine){
+/* Override the older measured-width finish control without a layout change on hover. */
+html[data-platform=desktop] .modal-foot .finish-action-slot :is(.finish-book,.finish-book:hover,.finish-book:focus-visible){width:164px!important;min-width:164px!important}}
+html[data-platform=desktop] .finish-action-slot .finish-book .finish-indicator{opacity:1;transition:none}

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'novel-nook-web-v45';
+const CACHE_NAME = 'novel-nook-web-v64';
 const APP_SHELL = [
   './',
   './index.html',
@@ -8,13 +8,19 @@ const APP_SHELL = [
   './NovelTrackerRecommendationLifecycle.js',
   './NovelTrackerRecommendations.js',
   './NovelTrackerUI.js',
+  './NovelTrackerMobile.js',
+  './NovelTrackerDropdownDefaults.js',
   './NovelTrackerWrapped.js',
   './NovelTrackerWrapped.css',
   './NovelTrackerReadingLife.js',
   './NovelTrackerReadingLife.css',
   './NovelTrackerUI.css',
   './NovelTrackerTheme.css',
-  './NovelTrackerMobile.css?v=45',
+  './NovelTrackerDesktop.css',
+  './NovelTrackerMotion.css',
+  './NovelTrackerBookLookup.js',
+  './NovelTrackerBookLookup.css',
+  './NovelTrackerMobile.css?v=47',
   './NovelTrackerWorkbookImporter.js',
   './NovelTrackerMark.png',
   './NovelNookLogo.svg'

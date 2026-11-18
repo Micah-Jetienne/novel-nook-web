@@ -149,7 +149,7 @@ window.NookUI = (() => {
     const details=formSections[0][1],reading=formSections[1][1],acquisition=formSections[2][1];
     const essential=new Set(['bookType','title','author','genre','series','volumes','pageCount']);
     const fields=items=>items.map(field=>inputField(field,book)).join('');
-    return `<p class="form-intro">Start with the essentials. You can add edition, rating and purchase details whenever you like. <strong>Book title is required.</strong></p><div class="form-grid">${fields(details.filter(field=>essential.has(field[0])))}</div><section class="editor-section"><h3>Reading record</h3><div class="form-grid">${fields(reading.filter(field=>['readingSetup','readingProgress','readingChoices','bookNotes'].includes(field[0])))}</div><p class="panel-note">On Hold means unread and in your collection. Blocked means not yet received. DNF means stopped without finishing. Reading status determines completion.</p></section><details class="editor-section" ${scoreCategories.some(key=>book[key]!==''&&book[key]!=null)?'open':''}><summary>Rate your reading experience <span>optional · category scores 0–10</span></summary><div class="form-grid">${fields(reading.filter(field=>scoreCategories.includes(field[0])||field[0]==='scoreGuide'))}</div></details><details class="editor-section"><summary>Cover & edition <span>optional</span></summary><div class="form-grid">${fields(details.filter(field=>!essential.has(field[0])))}</div></details><details class="editor-section"><summary>Collection & purchase <span>optional</span></summary><div class="form-grid">${fields(acquisition)}</div></details>`;
+    return `${window.NookBookLookup?.section()||''}<p class="form-intro">Start with the essentials. You can add edition, rating and purchase details whenever you like. <strong>Book title is required.</strong></p><div class="form-grid">${fields(details.filter(field=>essential.has(field[0])))}</div><section class="editor-section"><h3>Reading record</h3><div class="form-grid">${fields(reading.filter(field=>['readingSetup','readingProgress','readingChoices','bookNotes'].includes(field[0])))}</div><p class="panel-note">On Hold means unread and in your collection. Blocked means not yet received. DNF means stopped without finishing. Reading status determines completion.</p></section><details class="editor-section" ${scoreCategories.some(key=>book[key]!==''&&book[key]!=null)?'open':''}><summary>Rate your reading experience <span>optional · category scores 0–10</span></summary><div class="form-grid">${fields(reading.filter(field=>scoreCategories.includes(field[0])||field[0]==='scoreGuide'))}</div></details><details class="editor-section"><summary>Cover & edition <span>optional</span></summary><div class="form-grid">${fields(details.filter(field=>!essential.has(field[0])))}</div></details><details class="editor-section"><summary>Collection & purchase <span>optional</span></summary><div class="form-grid">${fields(acquisition)}</div></details>`;
   }
   function clearScore(form){
     scoreCategories.forEach(key=>{const input=form.elements.namedItem(key);if(input)input.value='';});
@@ -350,9 +350,15 @@ window.NookUI = (() => {
       banner=document.createElement('section');banner.className='parchment-library-banner';
       const copy=document.createElement('div'),eyebrow=document.createElement('div'),title=document.createElement('h1'),subtitle=document.createElement('p');
       eyebrow.className='eyebrow';eyebrow.textContent='YOUR COLLECTION';
-      title.textContent=document.querySelector('.page-title')?.textContent||'My Library';
-      subtitle.textContent=document.querySelector('.page-subtitle')?.textContent||'';
-      copy.append(eyebrow,title,subtitle);banner.appendChild(copy);content.prepend(banner);
+      if(native()){
+        const heading=document.createElement('h2');heading.textContent='Your collection';
+        subtitle.textContent=model.books.length+' '+(model.books.length===1?'book':'books')+' in your library';
+        copy.append(heading,subtitle);
+      }else{
+        title.textContent=document.querySelector('.page-title')?.textContent||'My Library';
+        subtitle.textContent=document.querySelector('.page-subtitle')?.textContent||'';
+        copy.append(eyebrow,title,subtitle);
+      }banner.appendChild(copy);content.prepend(banner);
     }
     // Keep library controls below the live header after the banner scrolls away.
     decorateParchment.headerObserver?.disconnect();
@@ -399,21 +405,32 @@ window.NookUI = (() => {
       for(const property of ['fill','stroke']){const value=node.getAttribute(property);if(value)node.setAttribute(property,parchmentColour(value));}
     });
   }
+  function animateFeedback(element,duration=200){
+    if(!native()||!element?.animate||document.hidden||document.documentElement?.dataset.motionInput==='keyboard'||window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
+    element.getAnimations?.().forEach(animation=>animation.cancel());
+    return element.animate([{opacity:0,transform:'translateY(4px) scale(.985)'},{opacity:1,transform:'translateY(0) scale(1)'}],{duration,easing:'cubic-bezier(0.23,1,0.32,1)'});
+  }
   function afterRender(snapshot) {
     if (!document.getElementById) return;
     document.documentElement.dataset.platform=native()?'desktop':'web';
     const root=document.getElementById('root');if(!root)return;
     const main=root.querySelector('main');if(main){main.dataset.page=ui.page;const heading=main.querySelector('.page-title');if(heading){heading.dataset.focusKey='page-heading-'+ui.page;heading.tabIndex=-1;}}
-    streamlinePages();organizeInsights();enhanceEmptyStates();enhanceCharts();window.NookWrapped?.mount();decorateParchment();makeLabels(root);
+    window.NookBookLookup?.mount();window.NookMobile?.keyboards(root);streamlinePages();organizeInsights();enhanceEmptyStates();enhanceCharts();window.NookWrapped?.mount();decorateParchment();makeLabels(root);
     all('.finish-action-slot .finish-book',root).forEach(button=>{
-      const label=button.querySelector('span:first-child');if(!label)return;
+      if(native())return;const label=button.querySelector('span:first-child');if(!label)return;
       const range=document.createRange();range.selectNodeContents(label);
       const scale=button.getBoundingClientRect().width/button.offsetWidth||1;
       const textRight=(range.getBoundingClientRect().right-button.getBoundingClientRect().left)/scale;
       // Eight pixels before the tick, ten after it, plus the right border.
       button.style.setProperty('--finish-expanded-width',`${textRight+39}px`);
     });
-    all('.filter-group button[onclick]',root).forEach(button=>{const match=button.getAttribute('onclick').match(/^set(?:Collection)?Filter\('([^']+)'\)$/);if(match&&match[1]!=='All')button.dataset.bookStatus=match[1];});
+    all('.filter-group button[onclick]',root).forEach(button=>{const match=button.getAttribute('onclick').match(/^set(?:Collection)?Filter\('([^']+)'\)$/);if(match&&match[1]!=='All'){button.dataset.bookStatus=match[1];if(match[1]==='Blocked'||match[1]==='On Hold'){const help=match[1]==='Blocked'?'Blocked: not yet received.':'On Hold: unread and in your collection.';button.title=help;button.setAttribute('aria-label',button.textContent.trim()+'. '+help);}}});
+    const libraryRoot=root.querySelector('.library-page');
+    if(libraryRoot&&!libraryRoot.querySelector('.reading-status-help')){
+      const help=document.createElement('details');help.className='reading-status-help';
+      help.innerHTML='<summary>What do the reading statuses mean?</summary><p>On Hold: unread and in your collection. Blocked: not yet received. Reading: currently reading. DNF: stopped without finishing. Read: finished.</p>';
+      libraryRoot.querySelector('.library-toolbar')?.insertAdjacentElement('afterend',help);
+    }
     all('.quote-mark,.shop-stat-icon,.month-icon,.picker-doodle,.wrapped-chat-avatar,.dash-glyph,.metric-icon,.searchicon,.cover-fallback,.shop-orbit,.shop-spark',root).forEach(el=>el.setAttribute('aria-hidden','true'));
     all('.recent-row[onclick]',root).forEach(el=>{el.setAttribute('tabindex','0');el.setAttribute('role','button');});
     all('tr.click-row[onclick]',root).forEach(row=>{const cell=row.querySelector('td');if(cell){const name=cell.textContent;const button=document.createElement('button');button.className='text-button';button.textContent=name;button.setAttribute('aria-label',`Show ${name} books in your library`);button.addEventListener('click',event=>{event.stopPropagation();row.click();});cell.textContent='';cell.appendChild(button);}});
@@ -431,7 +448,7 @@ window.NookUI = (() => {
       const title=modal.querySelector('.modal-title');if(title){title.id='active-dialog-title';title.tabIndex=-1;modal.setAttribute('aria-labelledby',title.id);}
     }
     if(nextKey!==modalKey){
-      if(nextKey){if(!snapshot?.modal)returnFocus=snapshot?.focus||returnFocus;modalKey=nextKey;draftBaseline=formValue();(modal?.querySelector('[name=title]')||modal?.querySelector('.modal-title'))?.focus({preventScroll:true});}
+      if(nextKey){animateFeedback(modal,220);if(!snapshot?.modal)returnFocus=snapshot?.focus||returnFocus;modalKey=nextKey;draftBaseline=formValue();(modal?.querySelector('[name=title]')||modal?.querySelector('.modal-title'))?.focus({preventScroll:true});}
       else {modalKey='';draftBaseline='';const target=all('[data-focus-key]',root).find(el=>el.dataset.focusKey===returnFocus);if(target)target.focus({preventScroll:true});else{const heading=main?.querySelector('.page-title');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}}returnFocus='';}
     }else if(snapshot?.focus){
       const target=all('[data-focus-key]',root).find(el=>el.dataset.focusKey===snapshot.focus);target?.focus({preventScroll:true});
@@ -443,6 +460,9 @@ window.NookUI = (() => {
   }
   function init() {
     if (!document.getElementById) return;
+    document.addEventListener('keydown',()=>{document.documentElement.dataset.motionInput='keyboard'},true);
+    document.addEventListener('pointerdown',()=>{document.documentElement.dataset.motionInput='pointer'},true);
+    document.addEventListener('pointermove',()=>{if(document.documentElement.dataset.motionInput==='keyboard')document.documentElement.dataset.motionInput='pointer'},{passive:true});
     window.receiveRecoverySnapshot=receiveRecoverySnapshot;window.receiveRecoveryLibrary=showRecovery;
     window.setImportBusy=value=>setBusy(value,'Reading workbook… Your original file is not changed.');
     window.receiveSaveResult=(success,message)=>{setSaveState(success?'Saved on this Mac':'Save failed — export a backup');if(!success)notify(message||'Your library could not be saved. Export a full backup to keep your changes.','error');};
@@ -466,5 +486,5 @@ window.NookUI = (() => {
     document.addEventListener('invalid',event=>{const field=event.target;if(field.closest('#book-form,#finish-form')){field.closest('details')?.setAttribute('open','');notify(field.validationMessage||'Check the highlighted field.','error');}},true);
     window.addEventListener('beforeunload',event=>{if(isDirty()){event.preventDefault();event.returnValue='';}});
   }
-  return {decorateParchment,layoutGenreLabels,genreQuadrant,isBusy:()=>busy,flag,notify,undo,dismissNotification,setSaveState,beforeRender,afterRender,init,isDirty,guardDiscard,confirmAction,setBusy,requestImportAction,setImportIntent,recoverLibrary,receiveRecoverySnapshot,cancelTopModal,openSettings,settingsModal,mobileNavigation,moveNavigation,emptyState,clearFilters,resetPicker,clearScore,filterSummary,editorSections,validateBookForm};
+  return {animateFeedback,decorateParchment,layoutGenreLabels,genreQuadrant,isBusy:()=>busy,flag,notify,undo,dismissNotification,setSaveState,beforeRender,afterRender,init,isDirty,guardDiscard,confirmAction,setBusy,requestImportAction,setImportIntent,recoverLibrary,receiveRecoverySnapshot,cancelTopModal,openSettings,settingsModal,mobileNavigation,moveNavigation,emptyState,clearFilters,resetPicker,clearScore,filterSummary,editorSections,validateBookForm};
 })();

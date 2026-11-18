@@ -31,3 +31,7 @@ Importing a full backup offers two distinct choices: merge its book records whil
 The web-only mobile stylesheet targets 375 × 812 portrait and also supports 414 × 896 portrait and 896 × 414 landscape, with safe-area spacing for the notch and home indicator, 16px form text to prevent focus zoom, and 44px minimum buttons and dropdown triggers. Navigation remains available in both orientations. Dialogs use the available viewport height and scroll internally; charts fit the available width and table text wraps without horizontal scrolling. Page zoom remains available.
 
 The current web release includes the parchment theme, consolidated Stats and recommendation portfolio/lifecycle. Device libraries stay in browser storage and are not published with the app. After an update, close and reopen the Home Screen app or refresh Safari to load the new cached version.
+
+## Mobile platform polish (18 November 2026)
+
+Hover effects are gated by hover/fine-pointer capability, while controls have immediate press feedback and keep text selectable elsewhere. Dynamic viewport sizing, Android keyboard resize, landscape safe-area padding, contained modal scrolling, numeric keyboards and a matching light browser/status bar are included. The app intentionally stays light in either OS appearance. Service-worker v64 refreshes the changed assets. Browser layout checks do not replace an iPhone/Android hardware check: confirm keyboard opening, sticky hover, landscape notches, scrolling and Home Screen mode on a phone before treating this as device-verified.
